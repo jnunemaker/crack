@@ -1,6 +1,21 @@
 = crack
 
-Description goes here.
+Really simple JSON and XML parsing, ripped from ActiveSupport so it can be used without all of ActiveSupport.
+
+= usage
+  
+  gem 'crack'
+  require 'crack' # for xml and json
+  require 'crack/json' # for just json
+  require 'crack/xml' # for just xml
+
+= examples
+  
+  Crack::XML.parse("<tag>This is the contents</tag>")
+    # => {'tag' => 'This is the contents'}
+  
+  Crack::JSON.parse('{"tag":"This is the contents"}')
+    # => {'tag' => 'This is the contents'}
 
 == Copyright
 
