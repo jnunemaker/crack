@@ -1,8 +1,6 @@
 = crack
 
-Really simple JSON and XML parsing, ripped from ActiveSupport so it can be used without all of ActiveSupport.
-
-The XML parser is ripped from Merb and the JSON parser is ripped from Rails. I take no credit, just packaged them for all to enjoy and easily use.
+Really simple JSON and XML parsing, ripped from Merb and Rails. The XML parser is ripped from Merb and the JSON parser is ripped from Rails. I take no credit, just packaged them for all to enjoy and easily use.
 
 = usage
   
