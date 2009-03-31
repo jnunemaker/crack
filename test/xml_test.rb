@@ -439,4 +439,13 @@ class XmlTest < Test::Unit::TestCase
 
     Crack::XML.parse(xml_string)['person'].should == expected_hash
   end
+  
+  should "handle an empty xml string" do
+    Crack::XML.parse('').should == {}
+  end
+  
+  # As returned in the response body by the unfuddle XML API when creating objects
+  should "handle an xml string containing a single space" do
+    Crack::XML.parse(' ').should == {}
+  end
 end
