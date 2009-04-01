@@ -5,7 +5,7 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "crack"
-    gem.summary = %Q{Really simple JSON and XML parsing, ripped from ActiveSupport so it can be used without all of ActiveSupport.}
+    gem.summary = %Q{Really simple JSON and XML parsing, ripped from Merb and Rails.}
     gem.email = "nunemaker@gmail.com"
     gem.homepage = "http://github.com/jnunemaker/crack"
     gem.authors = ["John Nunemaker"]
