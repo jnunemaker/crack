@@ -1,0 +1,6 @@
+== 0.1.1 2009-03-31
+* 1 minor patch
+  * Parsing empty or blank xml now returns empty hash instead of raising error.
+
+== 0.1.0 2009-03-28
+* Initial release.
