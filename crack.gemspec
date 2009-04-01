@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.date = %q{2009-03-31}
   s.email = %q{nunemaker@gmail.com}
   s.extra_rdoc_files = ["README.rdoc", "LICENSE"]
-  s.files = ["README.rdoc", "VERSION.yml", "lib/crack", "lib/crack/core_extensions.rb", "lib/crack/json.rb", "lib/crack/xml.rb", "lib/crack.rb", "test/crack_test.rb", "test/json_test.rb", "test/test_helper.rb", "test/xml_test.rb", "LICENSE"]
+  s.files = ["History", "README.rdoc", "VERSION.yml", "lib/crack", "lib/crack/core_extensions.rb", "lib/crack/json.rb", "lib/crack/xml.rb", "lib/crack.rb", "test/crack_test.rb", "test/json_test.rb", "test/test_helper.rb", "test/xml_test.rb", "LICENSE"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/jnunemaker/crack}
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
