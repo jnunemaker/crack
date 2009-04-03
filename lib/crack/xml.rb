@@ -1,6 +1,7 @@
 require 'rexml/parsers/streamparser'
 require 'rexml/parsers/baseparser'
 require 'rexml/light/node'
+require 'rexml/text'
 require 'date'
 require 'time'
 require 'yaml'
@@ -46,7 +47,13 @@ class REXMLUtilityNode #:nodoc:
 
   self.available_typecasts = self.typecasts.keys
 
-  def initialize(name, attributes = {})
+  def initialize(name, normalized_attributes = {})
+    
+    # unnormalize attribute values
+    attributes = Hash[* normalized_attributes.map { |key, value|
+      [ key, unnormalize_xml_entities(value) ]
+    }.flatten]
+    
     @name         = name.tr("-", "_")
     # leave the type alone if we don't know what it is
     @type         = self.class.available_typecasts.include?(attributes["type"]) ? attributes.delete("type") : attributes["type"]
@@ -74,7 +81,7 @@ class REXMLUtilityNode #:nodoc:
     end
 
     if @text
-      return { name => typecast_value( translate_xml_entities( inner_html ) ) }
+      return { name => typecast_value( unnormalize_xml_entities( inner_html ) ) }
     else
       #change repeating groups into an array
       groups = @children.inject({}) { |s,e| (s[e.name] ||= []) << e; s }
@@ -141,19 +148,6 @@ class REXMLUtilityNode #:nodoc:
     proc.nil? ? value : proc.call(value)
   end
 
-  # Convert basic XML entities into their literal values.
-  #
-  # @param value<#gsub> An XML fragment.
-  #
-  # @return <#gsub> The XML fragment after converting entities.
-  def translate_xml_entities(value)
-    value.gsub(/&lt;/,   "<").
-          gsub(/&gt;/,   ">").
-          gsub(/&quot;/, '"').
-          gsub(/&apos;/, "'").
-          gsub(/&amp;/,  "&")
-  end
-
   # Take keys of the form foo-bar and convert them to foo_bar
   def undasherize_keys(params)
     params.keys.each do |key, value|
@@ -178,6 +172,12 @@ class REXMLUtilityNode #:nodoc:
   # @alias #to_html #to_s
   def to_s
     to_html
+  end
+  
+  private
+
+  def unnormalize_xml_entities value
+    REXML::Text.unnormalize(value)
   end
 end
 

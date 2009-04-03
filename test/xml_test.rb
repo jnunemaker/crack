@@ -95,17 +95,24 @@ class XmlTest < Test::Unit::TestCase
     Crack::XML.parse(xml)['tag'].should == Date.parse('2007-12-31')
   end
 
+  xml_entities = {
+    "<" => "&lt;",
+    ">" => "&gt;",
+    '"' => "&quot;",
+    "'" => "&apos;",
+    "&" => "&amp;"
+  }
   should "should unescape html entities" do
-    values = {
-      "<" => "&lt;",
-      ">" => "&gt;",
-      '"' => "&quot;",
-      "'" => "&apos;",
-      "&" => "&amp;"
-    }
-    values.each do |k,v|
+    xml_entities.each do |k,v|
       xml = "<tag>Some content #{v}</tag>"
       Crack::XML.parse(xml)['tag'].should =~ Regexp.new(k)
+    end
+  end
+  
+  should "should unescape XML entities in attributes" do
+    xml_entities.each do |k,v|
+      xml = "<tag attr='Some content #{v}'></tag>"
+      Crack::XML.parse(xml)['tag']['attr'].should =~ Regexp.new(k)
     end
   end
 
