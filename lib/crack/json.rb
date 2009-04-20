@@ -43,7 +43,9 @@ module Crack
             end
           when ":",","
             marks << scanner.pos - 1 unless quoting
-          end
+          when "\\"
+            scanner.skip(/\\/)
+          end          
         end
 
         if marks.empty?

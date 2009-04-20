@@ -39,4 +39,27 @@ class JsonTest < Test::Unit::TestCase
       Crack::JSON.parse(%({: 1}))
     }.should raise_error(Crack::ParseError)
   end
+  
+  should "should be able to parse a JSON response from a Twitter search about 'firefox'" do
+    data = ''
+    File.open(File.dirname(__FILE__) + "/data/twittersearch-firefox.json", "r") { |f|
+        data = f.read
+    }
+    
+    lambda {
+      Crack::JSON.parse(data)
+    }.should_not raise_error(Crack::ParseError)
+  end
+
+  should "should be able to parse a JSON response from a Twitter search about 'internet explorer'" do
+    data = ''
+    File.open(File.dirname(__FILE__) + "/data/twittersearch-ie.json", "r") { |f|
+        data = f.read
+    }
+    
+    lambda {
+      Crack::JSON.parse(data)
+    }.should_not raise_error(Crack::ParseError)
+  end
+
 end
