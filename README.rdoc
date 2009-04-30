@@ -20,3 +20,7 @@ Really simple JSON and XML parsing, ripped from Merb and Rails. The XML parser i
 == Copyright
 
 Copyright (c) 2009 John Nunemaker. See LICENSE for details.
+
+== Docs
+
+http://rdoc.info/projects/jnunemaker/crack
