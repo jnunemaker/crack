@@ -81,7 +81,13 @@ class REXMLUtilityNode #:nodoc:
     end
 
     if @text
-      return { name => typecast_value( unnormalize_xml_entities( inner_html ) ) }
+      t = typecast_value( unnormalize_xml_entities( inner_html ) )
+      unless t.respond_to? :attributes
+        # Some types don't work with singleton methods, so modifying the class instead
+        t.class.send :attr_accessor, :attributes
+      end
+      t.attributes = attributes
+      return { name => t }
     else
       #change repeating groups into an array
       groups = @children.inject({}) { |s,e| (s[e.name] ||= []) << e; s }
