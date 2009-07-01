@@ -65,33 +65,39 @@ class XmlTest < Test::Unit::TestCase
         }
       }
     }
-
+    
     Crack::XML.parse(xml).should == hash
   end
   
-  should "should include attributes hash if present" do
-    xml =<<-XML
-      <opt>
-        <user login="grep">Gary R Epstein</user>
-        <user>Simon T Tyson</user>
-      </opt>
-    XML
+  context "Parsing xml with text and attributes" do
+    setup do
+      xml =<<-XML
+        <opt>
+          <user login="grep">Gary R Epstein</user>
+          <user>Simon T Tyson</user>
+        </opt>
+      XML
+      @data = Crack::XML.parse(xml)
+    end
 
-    Crack::XML.parse(xml)['opt']['user'].class.should == Array
-
-    hash = {
-      'opt' => {
-        'user' => [
-          'Gary R Epstein',
-          'Simon T Tyson'
-        ]
+    should "correctly parse text nodes" do
+      @data.should == {
+        'opt' => {
+          'user' => [
+            'Gary R Epstein',
+            'Simon T Tyson'
+          ]
+        }
       }
-    }
-
-    Crack::XML.parse(xml).should == hash
+    end
     
-    Crack::XML.parse(xml)['opt']['user'][0].attributes.should == { 'login' => 'grep' }
-    Crack::XML.parse(xml)['opt']['user'][1].attributes.should == {}
+    should "be parse attributes for text node if present" do
+      @data['opt']['user'][0].attributes.should == {'login' => 'grep'}
+    end
+    
+    should "default attributes to empty hash if not present" do
+      @data['opt']['user'][1].attributes.should == {}
+    end
   end
 
   should "should typecast an integer" do
