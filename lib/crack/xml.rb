@@ -82,10 +82,7 @@ class REXMLUtilityNode #:nodoc:
 
     if @text
       t = typecast_value( unnormalize_xml_entities( inner_html ) )
-      unless t.respond_to? :attributes
-        # Some types don't work with singleton methods, so modifying the class instead
-        t.class.send :attr_accessor, :attributes
-      end
+      t.class.send(:attr_accessor, :attributes)
       t.attributes = attributes
       return { name => t }
     else
