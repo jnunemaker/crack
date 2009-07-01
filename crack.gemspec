@@ -2,31 +2,34 @@
 
 Gem::Specification.new do |s|
   s.name = %q{crack}
-  s.version = "0.1.2"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["John Nunemaker"]
-  s.date = %q{2009-04-21}
+  s.date = %q{2009-06-30}
   s.email = %q{nunemaker@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
-    "README.rdoc"
+     "README.rdoc"
   ]
   s.files = [
-    "LICENSE",
-    "README.rdoc",
-    "Rakefile",
-    "VERSION.yml",
-    "lib/crack.rb",
-    "lib/crack/core_extensions.rb",
-    "lib/crack/json.rb",
-    "lib/crack/xml.rb",
-    "test/crack_test.rb",
-    "test/data/twittersearch-firefox.json",
-    "test/data/twittersearch-ie.json",
-    "test/json_test.rb",
-    "test/test_helper.rb",
-    "test/xml_test.rb"
+    ".gitignore",
+     "History",
+     "LICENSE",
+     "README.rdoc",
+     "Rakefile",
+     "VERSION.yml",
+     "crack.gemspec",
+     "lib/crack.rb",
+     "lib/crack/core_extensions.rb",
+     "lib/crack/json.rb",
+     "lib/crack/xml.rb",
+     "test/crack_test.rb",
+     "test/data/twittersearch-firefox.json",
+     "test/data/twittersearch-ie.json",
+     "test/json_test.rb",
+     "test/test_helper.rb",
+     "test/xml_test.rb"
   ]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/jnunemaker/crack}
@@ -37,9 +40,9 @@ Gem::Specification.new do |s|
   s.summary = %q{Really simple JSON and XML parsing, ripped from Merb and Rails.}
   s.test_files = [
     "test/crack_test.rb",
-    "test/json_test.rb",
-    "test/test_helper.rb",
-    "test/xml_test.rb"
+     "test/json_test.rb",
+     "test/test_helper.rb",
+     "test/xml_test.rb"
   ]
 
   if s.respond_to? :specification_version then
