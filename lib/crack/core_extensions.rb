@@ -1,3 +1,5 @@
+require 'uri'
+
 class Object #:nodoc:
   # @return <TrueClass, FalseClass>
   #
