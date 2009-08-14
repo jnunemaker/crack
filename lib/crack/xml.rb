@@ -82,7 +82,7 @@ class REXMLUtilityNode #:nodoc:
 
     if @text
       t = typecast_value( unnormalize_xml_entities( inner_html ) )
-      t.class.send(:attr_accessor, :attributes)
+      t.class.send(:include, Crack::HasAttributes)
       t.attributes = attributes
       return { name => t }
     else
@@ -91,7 +91,7 @@ class REXMLUtilityNode #:nodoc:
 
       out = nil
       if @type == "array"
-        out = []
+        out = Crack::Array.new
         groups.each do |k, v|
           if v.size == 1
             out << v.first.to_hash.entries.first.last
@@ -99,6 +99,8 @@ class REXMLUtilityNode #:nodoc:
             out << v.map{|e| e.to_hash[k]}
           end
         end
+        out.attributes = attributes.reject { |k,v| k == "type" }
+
         out = out.flatten
 
       else # If Hash
@@ -185,6 +187,7 @@ class REXMLUtilityNode #:nodoc:
 end
 
 module Crack
+  
   class XML
     def self.parse(xml)
       stack = []
@@ -211,4 +214,13 @@ module Crack
       stack.length > 0 ? stack.pop.to_hash : {}
     end
   end
+  
+  module HasAttributes
+    attr_accessor :attributes
+  end
+  
+  class Array < ::Array
+    include HasAttributes
+  end
+  
 end

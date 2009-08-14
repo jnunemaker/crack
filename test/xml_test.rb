@@ -399,6 +399,19 @@ class XmlTest < Test::Unit::TestCase
     Crack::XML.parse(blog_xml).should == expected_blog_hash
   end
 
+  should "should provide access to additional attributes on an array element" do
+    blog_xml = <<-XML
+      <blog>
+        <posts type="array" total="456">
+          <post>a post</post>
+          <post>another post</post>
+        </posts>
+      </blog>
+    XML
+    hash = Crack::XML.parse(blog_xml)
+    hash["blog"]["posts"].attributes.should == {"total" => "456"}
+  end
+
   should "should handle file types (ActiveSupport Compatible)" do
     blog_xml = <<-XML
       <blog>
