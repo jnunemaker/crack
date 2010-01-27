@@ -8,10 +8,11 @@ begin
     gem.summary = %Q{Really simple JSON and XML parsing, ripped from Merb and Rails.}
     gem.email = "nunemaker@gmail.com"
     gem.homepage = "http://github.com/jnunemaker/crack"
-    gem.authors = ["John Nunemaker"]
+    gem.authors = ["John Nunemaker", "Wynn Netherland"]
     gem.rubyforge_project = 'crack'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
