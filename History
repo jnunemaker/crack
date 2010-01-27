@@ -1,3 +1,7 @@
+== 0.1.5 2010-01-27
+* 1 minor patch
+  * Strings that begin with dates shouldn't be parsed as such (sandro)
+
 == 0.1.3 2009-06-22
 * 1 minor patch
   * Parsing a text node with attributes stores them in the attributes method (tamalw)
