@@ -1,4 +1,5 @@
 module Crack
+  VERSION = "0.1.6".freeze
   class ParseError < StandardError; end
 end
 
