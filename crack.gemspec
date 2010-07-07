@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{crack}
-  s.version = "0.1.7"
+  s.version = "0.1.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["John Nunemaker", "Wynn Netherland"]
-  s.date = %q{2010-02-20}
+  s.date = %q{2010-07-07}
   s.email = %q{nunemaker@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
      "LICENSE",
      "README.rdoc",
      "Rakefile",
-     "VERSION.yml",
      "crack.gemspec",
      "lib/crack.rb",
      "lib/crack/core_extensions.rb",
@@ -40,7 +39,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{crack}
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Really simple JSON and XML parsing, ripped from Merb and Rails.}
   s.test_files = [
     "test/crack_test.rb",
