@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake'
+require File.expand_path('../lib/crack', __FILE__)
 
 begin
   require 'jeweler'
@@ -10,6 +11,7 @@ begin
     gem.homepage = "http://github.com/jnunemaker/crack"
     gem.authors = ["John Nunemaker", "Wynn Netherland"]
     gem.rubyforge_project = 'crack'
+    gem.version = Crack::VERSION
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
