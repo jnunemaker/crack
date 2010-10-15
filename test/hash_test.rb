@@ -3,16 +3,17 @@ require 'test_helper'
 class CrackTest < Test::Unit::TestCase
   context "to_xml_attributes" do
     setup do
-      @hash = { :one => "ONE", "two" => "TWO" }
+      @hash = { :one => "ONE", "two" => "TWO", :three => "it \"should\" work" }
     end
     
-    should "should turn the hash into xml attributes" do
+    should "turn the hash into xml attributes" do
       attrs = @hash.to_xml_attributes
       attrs.should =~ /one="ONE"/m
       attrs.should =~ /two="TWO"/m
+      attrs.should =~ /three="it &quot;should&quot; work"/m
     end
 
-    should 'should preserve _ in hash keys' do
+    should 'preserve _ in hash keys' do
       attrs = {
         :some_long_attribute => "with short value",
         :crash               => :burn,
@@ -38,7 +39,7 @@ class CrackTest < Test::Unit::TestCase
       end
     end
 
-    should 'should not leave a trailing &' do
+    should 'not leave a trailing &' do
       {
         :name => 'Bob', 
         :address => {
@@ -49,7 +50,7 @@ class CrackTest < Test::Unit::TestCase
       }.to_params.should_not =~ /&$/
     end
 
-    should 'should URL encode unsafe characters' do
+    should 'URL encode unsafe characters' do
       {:q => "?&\" +"}.to_params.should == "q=%3F%26%22%20%2B"
     end
   end
