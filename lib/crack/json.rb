@@ -16,7 +16,11 @@ module Crack
 
     protected
       def self.unescape(str)
-        str.force_encoding('utf-8').gsub(/\\u([0-9a-f]{4})/) { [$1.hex].pack("U") }
+        # Force the encoding to be UTF-8 so we can perform regular expressions
+        # on 1.9.2 without blowing up.
+        # see http://stackoverflow.com/questions/1224204/ruby-mechanize-getting-force-encoding-exception for a similar issue
+        str.force_encoding('UTF-8') if defined?(Encoding) && str.respond_to?(:force_encoding)
+        str.gsub(/\\u([0-9a-f]{4})/) { [$1.hex].pack("U") }
       end
 
       # matches YAML-formatted dates
