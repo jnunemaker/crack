@@ -13,7 +13,7 @@ require 'bigdecimal'
 # This represents the hard part of the work, all I did was change the
 # underlying parser.
 class REXMLUtilityNode #:nodoc:
-  attr_accessor :name, :attributes, :children, :type
+  attr_accessor :name, :attributes, :children, :type, :empty
 
   def self.typecasts
     @@typecasts
@@ -62,6 +62,7 @@ class REXMLUtilityNode #:nodoc:
     @attributes   = undasherize_keys(attributes)
     @children     = []
     @text         = false
+    @empty        = false
   end
 
   def add_node(node)
@@ -80,7 +81,7 @@ class REXMLUtilityNode #:nodoc:
       return {name => f}
     end
 
-    if @text
+    if @text || @empty
       t = typecast_value( unnormalize_xml_entities( inner_html ) )
       t.class.send(:attr_accessor, :attributes)
       t.attributes = attributes
@@ -189,6 +190,7 @@ module Crack
     def self.parse(xml)
       stack = []
       parser = REXML::Parsers::BaseParser.new(xml)
+      inner_elements = 0
 
       while true
         event = parser.pull
@@ -203,8 +205,11 @@ module Crack
           if stack.size > 1
             temp = stack.pop
             stack.last.add_node(temp)
+          else
+            stack.last.empty = true if inner_elements == 0
           end
         when :text, :cdata
+          inner_elements +=1
           stack.last.add_node(event[1]) unless event[1].strip.length == 0 || stack.empty?
         end
       end
