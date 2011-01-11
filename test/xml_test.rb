@@ -19,8 +19,11 @@ class XmlTest < Test::Unit::TestCase
 
   should "should transform a simple tag with attributes" do
     xml = "<tag attr1='1' attr2='2'></tag>"
-    hash = { 'tag' => { 'attr1' => '1', 'attr2' => '2' } }
-    Crack::XML.parse(xml).should == hash
+    hash = { 'tag' => "" } 
+    attributes = { 'attr1' => '1', 'attr2' => '2' }
+    @data = Crack::XML.parse(xml)
+    @data.should == hash
+    @data["tag"].attributes.should == attributes
   end
 
   should "should transform repeating siblings into an array" do
@@ -98,6 +101,11 @@ class XmlTest < Test::Unit::TestCase
     should "default attributes to empty hash if not present" do
       @data['opt']['user'][1].attributes.should == {}
     end
+
+    should "default not default to attributes when an empty element is present" do
+      @data = Crack::XML.parse("<user login='grop'></user>")
+      @data['user'].attributes.should == {'login' => 'grop'}
+    end	
   end
 
   should "should typecast an integer" do
@@ -143,7 +151,7 @@ class XmlTest < Test::Unit::TestCase
   should "should unescape XML entities in attributes" do
     xml_entities.each do |k,v|
       xml = "<tag attr='Some content #{v}'></tag>"
-      Crack::XML.parse(xml)['tag']['attr'].should =~ Regexp.new(k)
+      Crack::XML.parse(xml)['tag'].attributes["attr"].should =~ Regexp.new(k)
     end
   end
 
@@ -154,13 +162,14 @@ class XmlTest < Test::Unit::TestCase
 
   should "should undasherize keys as attributes" do
     xml = "<tag1 attr-1='1'></tag1>"
-    Crack::XML.parse(xml)['tag1'].keys.should include( 'attr_1')
+    @data = Crack::XML.parse(xml)
+    @data["tag1"].attributes.keys.should include( 'attr_1')
   end
 
   should "should undasherize keys as tags and attributes" do
     xml = "<tag-1 attr-1='1'></tag-1>"
     Crack::XML.parse(xml).keys.should include( 'tag_1' )
-    Crack::XML.parse(xml)['tag_1'].keys.should include( 'attr_1')
+    Crack::XML.parse(xml)['tag_1'].attributes.keys.should include( 'attr_1')
   end
 
   should "should render nested content correctly" do
