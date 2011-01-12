@@ -13,7 +13,7 @@ require 'bigdecimal'
 # This represents the hard part of the work, all I did was change the
 # underlying parser.
 class REXMLUtilityNode #:nodoc:
-  attr_accessor :name, :attributes, :children, :type
+  attr_accessor :name, :attributes, :children, :type, :empty_node
 
   def self.typecasts
     @@typecasts
@@ -62,11 +62,20 @@ class REXMLUtilityNode #:nodoc:
     @attributes   = undasherize_keys(attributes)
     @children     = []
     @text         = false
+    @empty_node   = false
   end
 
   def add_node(node)
     @text = true if node.is_a? String
     @children << node
+  end
+
+  def emptyze!(obj,value)
+    # Monkeypatch to allow empty_node? in the hash values
+    obj.class.instance_eval do 
+      define_method(:empty_node?) { @_empty_node }
+    end
+    obj.instance_eval { @_empty_node = value }
   end
 
   def to_hash
@@ -84,6 +93,7 @@ class REXMLUtilityNode #:nodoc:
       t = typecast_value( unnormalize_xml_entities( inner_html ) )
       t.class.send(:attr_accessor, :attributes)
       t.attributes = attributes
+      emptyze!(t,false)
       return { name => t }
     else
       #change repeating groups into an array
@@ -113,6 +123,8 @@ class REXMLUtilityNode #:nodoc:
         out.merge! attributes unless attributes.empty?
         out = out.empty? ? nil : out
       end
+
+      emptyze!(out,@empty_node)
 
       if @type && out.nil?
         { name => typecast_value(out) }
@@ -189,6 +201,7 @@ module Crack
     def self.parse(xml)
       stack = []
       parser = REXML::Parsers::BaseParser.new(xml)
+      inner_elements = [0]
 
       while true
         event = parser.pull
@@ -199,10 +212,15 @@ module Crack
           # do nothing
         when :start_element
           stack.push REXMLUtilityNode.new(event[1], event[2])
+          inner_elements[-1] += 1
+          inner_elements << 0
         when :end_element
           if stack.size > 1
             temp = stack.pop
+            temp.empty_node = true if inner_elements.pop == 0
             stack.last.add_node(temp)
+          else
+            stack.last.empty_node = true if inner_elements.pop == 0
           end
         when :text, :cdata
           stack.last.add_node(event[1]) unless event[1].strip.length == 0 || stack.empty?
