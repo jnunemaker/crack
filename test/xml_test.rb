@@ -68,6 +68,32 @@ class XmlTest < Test::Unit::TestCase
     
     Crack::XML.parse(xml).should == hash
   end
+
+  context "Using empty_node? method in the output hash" do
+    setup do 
+      @data1 = Crack::XML.parse("<a h='s' />")
+      @data2 = Crack::XML.parse("<a><h>s</h></a>")
+      @data3 = Crack::XML.parse("<a><b><c></c></b></a>")
+    end
+
+    should "allow us to differenciate an empty tag with attributes from inner tags with text nodes" do    
+      @data1.should == @data2
+      @data1["a"].empty_node?.should_not == @data2["a"].empty_node?    
+    end
+
+    should "be done by monkeypatching the hash keys with a method called empty_node? that tells whether the given node was empty" do
+      @data3["a"].methods.should include(:empty_node?)
+      @data3["a"].empty_node?.should == false
+      @data3["a"]["b"].empty_node?.should == false
+      @data3["a"]["b"]["c"].empty_node?.should == true
+    end
+
+    should "be false in text nodes" do
+      @data2["a"]["h"].empty_node?.should == false
+    end
+
+  end
+
   
   context "Parsing xml with text and attributes" do
     setup do
