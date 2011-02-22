@@ -19,6 +19,9 @@ class JsonTest < Test::Unit::TestCase
     # no time zone
     %({a: "2007-01-01 01:12:34"})                 => {'a' => "2007-01-01 01:12:34"},
     %({"bio": "1985-01-29: birthdate"})           => {'bio' => '1985-01-29: birthdate'},
+    %({"regex": /foo.*/})                         => {'regex' => /foo.*/},
+    %({"regex": /foo.*/i})                        => {'regex' => /foo.*/i},
+    %({"regex": /foo.*/mix})                      => {'regex' => /foo.*/mix},
     %([])    => [],
     %({})    => {},
     %(1)     => 1,
@@ -32,9 +35,9 @@ class JsonTest < Test::Unit::TestCase
   
   TESTS.each do |json, expected|
     should "should decode json (#{json})" do
-      lambda {
+      #lambda {
         Crack::JSON.parse(json).should == expected
-      }.should_not raise_error
+      #}.should_not raise_error
     end
   end
 
