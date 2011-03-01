@@ -28,24 +28,33 @@ class JsonTest < Test::Unit::TestCase
     %(null)  => nil,
     %(true)  => true,
     %(false) => false,
-    %q("http:\/\/test.host\/posts\/1") => "http://test.host/posts/1"
+    %q("http:\/\/test.host\/posts\/1") => "http://test.host/posts/1",
+
+    # \u0000 and \x00 escape sequences
+    %q({"foo":"bar\u0000"}) => {"foo" => "bar"},
+    %q({"foo":"bar\u0000baz"}) => {"foo" => "barbaz"},
+    %q(bar\u0000) => "bar",
+    %q(bar\u0000baz) => "barbaz",
+
+    %q({"foo":"bar\x00"}) => {"foo" => "bar\x00"},
+    %q({"foo":"bar\x00baz"}) => {"foo" => "bar\x00baz"}
   }
   
   TESTS.each do |json, expected|
-    should "should decode json (#{json})" do
+    should "decode json (#{json})" do
       lambda {
         Crack::JSON.parse(json).should == expected
       }.should_not raise_error
     end
   end
 
-  should "should raise error for failed decoding" do
+  should "raise error for failed decoding" do
     lambda {
       Crack::JSON.parse(%({: 1}))
     }.should raise_error(Crack::ParseError)
   end
   
-  should "should be able to parse a JSON response from a Twitter search about 'firefox'" do
+  should "be able to parse a JSON response from a Twitter search about 'firefox'" do
     data = ''
     File.open(File.dirname(__FILE__) + "/data/twittersearch-firefox.json", "r") { |f|
         data = f.read
@@ -56,7 +65,7 @@ class JsonTest < Test::Unit::TestCase
     }.should_not raise_error(Crack::ParseError)
   end
 
-  should "should be able to parse a JSON response from a Twitter search about 'internet explorer'" do
+  should "be able to parse a JSON response from a Twitter search about 'internet explorer'" do
     data = ''
     File.open(File.dirname(__FILE__) + "/data/twittersearch-ie.json", "r") { |f|
         data = f.read

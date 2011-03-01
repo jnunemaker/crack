@@ -1,3 +1,4 @@
+$:.unshift("lib")
 require 'rubygems'
 require 'rake'
 require File.expand_path('../lib/crack', __FILE__)
