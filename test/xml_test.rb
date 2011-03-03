@@ -98,6 +98,16 @@ class XmlTest < Test::Unit::TestCase
     should "default attributes to empty hash if not present" do
       @data['opt']['user'][1].attributes.should == {}
     end
+    
+    should "add 'attributes' accessor methods to parsed instances of String" do
+      @data['opt']['user'][0].respond_to?(:attributes).should be(true)
+      @data['opt']['user'][0].respond_to?(:attributes=).should be(true)
+    end
+    
+    should "not add 'attributes' accessor methods to all instances of String" do
+      "some-string".respond_to?(:attributes).should be(false)
+      "some-string".respond_to?(:attributes=).should be(false)
+    end
   end
 
   should "should typecast an integer" do
