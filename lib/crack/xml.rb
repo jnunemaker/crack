@@ -82,8 +82,12 @@ class REXMLUtilityNode #:nodoc:
 
     if @text
       t = typecast_value( unnormalize_xml_entities( inner_html ) )
-      t.class.send(:attr_accessor, :attributes)
-      t.attributes = attributes
+      if t.is_a?(String)
+        class << t
+          attr_accessor :attributes
+        end
+        t.attributes = attributes
+      end
       return { name => t }
     else
       #change repeating groups into an array
