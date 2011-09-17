@@ -6,6 +6,12 @@ module Crack
       return $+.downcase
     end
 
+    def to_xml_attributes(hash)
+      hash.map do |k,v|
+        %{#{Crack::Util.snake_case(k.to_s).sub(/^(.{1,1})/) { |m| m.downcase }}="#{v.to_s.gsub('"', '&quot;')}"}
+      end.join(' ')
+    end
+
     extend self
   end
 end

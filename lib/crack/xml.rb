@@ -173,7 +173,7 @@ class REXMLUtilityNode #:nodoc:
   # @return <String> The HTML node in text form.
   def to_html
     attributes.merge!(:type => @type ) if @type
-    "<#{name}#{attributes.to_xml_attributes}>#{@nil_element ? '' : inner_html}</#{name}>"
+    "<#{name}#{Crack::Util.to_xml_attributes(attributes)}>#{@nil_element ? '' : inner_html}</#{name}>"
   end
 
   # @alias #to_html #to_s

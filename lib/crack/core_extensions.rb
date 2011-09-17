@@ -12,16 +12,3 @@ class Object #:nodoc:
     respond_to?(:empty?) ? empty? : !self
   end unless method_defined?(:blank?)
 end # class Object
-
-class Hash #:nodoc:
-  # @return <String> The hash as attributes for an XML tag.
-  #
-  # @example
-  #   { :one => 1, "two"=>"TWO" }.to_xml_attributes
-  #     #=> 'one="1" two="TWO"'
-  def to_xml_attributes
-    map do |k,v|
-      %{#{Crack::Util.snake_case(k.to_s).sub(/^(.{1,1})/) { |m| m.downcase }}="#{v.to_s.gsub('"', '&quot;')}"}
-    end.join(' ')
-  end
-end
