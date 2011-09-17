@@ -5,7 +5,7 @@ class CrackTest < Test::Unit::TestCase
     setup do
       @hash = { :one => "ONE", "two" => "TWO", :three => "it \"should\" work" }
     end
-    
+
     should "turn the hash into xml attributes" do
       attrs = Crack::Util.to_xml_attributes(@hash)
       attrs.should =~ /one="ONE"/m

@@ -48,12 +48,12 @@ class REXMLUtilityNode #:nodoc:
   self.available_typecasts = self.typecasts.keys
 
   def initialize(name, normalized_attributes = {})
-    
+
     # unnormalize attribute values
     attributes = Hash[* normalized_attributes.map { |key, value|
       [ key, unnormalize_xml_entities(value) ]
     }.flatten]
-    
+
     @name         = name.tr("-", "_")
     # leave the type alone if we don't know what it is
     @type         = self.class.available_typecasts.include?(attributes["type"]) ? attributes.delete("type") : attributes["type"]
@@ -180,7 +180,7 @@ class REXMLUtilityNode #:nodoc:
   def to_s
     to_html
   end
-  
+
   private
 
   def unnormalize_xml_entities value
