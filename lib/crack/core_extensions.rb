@@ -13,14 +13,6 @@ class Object #:nodoc:
   end unless method_defined?(:blank?)
 end # class Object
 
-class String #:nodoc:
-  def snake_case
-    return self.downcase if self =~ /^[A-Z]+$/
-    self.gsub(/([A-Z]+)(?=[A-Z][a-z]?)|\B[A-Z]/, '_\&') =~ /_*(.*)/
-    return $+.downcase
-  end unless method_defined?(:snake_case)
-end # class String
-
 class Hash #:nodoc:
   # @return <String> This hash as a query string
   #
@@ -77,7 +69,7 @@ class Hash #:nodoc:
   #     #=> 'one="1" two="TWO"'
   def to_xml_attributes
     map do |k,v|
-      %{#{k.to_s.snake_case.sub(/^(.{1,1})/) { |m| m.downcase }}="#{v.to_s.gsub('"', '&quot;')}"}
+      %{#{Crack::Util.snake_case(k.to_s).sub(/^(.{1,1})/) { |m| m.downcase }}="#{v.to_s.gsub('"', '&quot;')}"}
     end.join(' ')
   end
 end
