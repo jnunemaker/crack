@@ -19,6 +19,9 @@ class JsonTest < Test::Unit::TestCase
     # no time zone
     %({a: "2007-01-01 01:12:34"})                 => {'a' => "2007-01-01 01:12:34"},
     %({"bio": "1985-01-29: birthdate"})           => {'bio' => '1985-01-29: birthdate'},
+    %({"regex": /foo.*/})                         => {'regex' => /foo.*/},
+    %({"regex": /foo.*/i})                        => {'regex' => /foo.*/i},
+    %({"regex": /foo.*/mix})                      => {'regex' => /foo.*/mix},
     %([])    => [],
     %({})    => {},
     %(1)     => 1,

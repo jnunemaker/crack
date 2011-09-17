@@ -24,8 +24,9 @@ module Crack
 
       # Ensure that ":" and "," are always followed by a space
       def self.convert_json_to_yaml(json) #:nodoc:
+        json = String.new(json) #can't modify a frozen string
         scanner, quoting, marks, pos, times = StringScanner.new(json), false, [], nil, []
-        while scanner.scan_until(/(\\['"]|['":,\\]|\\.)/)
+        while scanner.scan_until(/(\\['"]|['":,\/\\]|\\.)/)
           case char = scanner[1]
           when '"', "'"
             if !quoting
@@ -41,10 +42,18 @@ module Crack
               end
               quoting = false
             end
+          when "/"
+            if !quoting
+              json[scanner.pos - 1] = "!ruby/regexp /"
+              scanner.pos += 13
+              scanner.scan_until(/\/[mix]*/)
+            end
           when ":",","
             marks << scanner.pos - 1 unless quoting
           when "\\"
             scanner.skip(/\\/)
+          else
+            puts char
           end          
         end
 
