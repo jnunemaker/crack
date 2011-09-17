@@ -4,6 +4,7 @@ require 'test_helper'
 class JsonTest < Test::Unit::TestCase  
   TESTS = {
     %q({"data": "G\u00fcnter"})                   => {"data" => "Günter"},
+		%q({"html": "\u003Cdiv\\u003E"})              => {"html" => "<div>"},
     %q({"returnTo":{"\/categories":"\/"}})        => {"returnTo" => {"/categories" => "/"}},
     %q({returnTo:{"\/categories":"\/"}})          => {"returnTo" => {"/categories" => "/"}},
     %q({"return\\"To\\":":{"\/categories":"\/"}}) => {"return\"To\":" => {"/categories" => "/"}},
