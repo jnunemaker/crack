@@ -18,7 +18,7 @@ module Crack
       def self.unescape(str)
         str.gsub(/\\u0000/, "").gsub(/\\u([0-9a-f]{4})/) { [$1.hex].pack("U") }
       end
-      
+
       # matches YAML-formatted dates
       DATE_REGEX = /^\d{4}-\d{2}-\d{2}$|^\d{4}-\d{1,2}-\d{1,2}[T \t]+\d{1,2}:\d{2}:\d{2}(\.[0-9]*)?(([ \t]*)Z|[-+]\d{2}?(:\d{2})?)?$/
 
@@ -52,9 +52,7 @@ module Crack
             marks << scanner.pos - 1 unless quoting
           when "\\"
             scanner.skip(/\\/)
-          else
-            puts char
-          end          
+          end
         end
 
         if marks.empty?
