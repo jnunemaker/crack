@@ -16,7 +16,7 @@ module Crack
 
     protected
       def self.unescape(str)
-        str.gsub(/\\u([0-9a-f]{4})/) { [$1.hex].pack("U") }
+        str.gsub(/\\u0000/, "").gsub(/\\u([0-9a-f]{4})/) { [$1.hex].pack("U") }
       end
       
       # matches YAML-formatted dates
