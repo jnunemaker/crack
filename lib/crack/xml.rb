@@ -13,7 +13,7 @@ require 'bigdecimal'
 # This represents the hard part of the work, all I did was change the
 # underlying parser.
 class REXMLUtilityNode #:nodoc:
-  attr_accessor :name, :attributes, :children, :type
+  attr_accessor :name, :attributez, :children, :type
 
   def self.typecasts
     @@typecasts
@@ -47,19 +47,19 @@ class REXMLUtilityNode #:nodoc:
 
   self.available_typecasts = self.typecasts.keys
 
-  def initialize(name, normalized_attributes = {})
-    
+  def initialize(name, normalized_attributez = {})
+
     # unnormalize attribute values
-    attributes = Hash[* normalized_attributes.map { |key, value|
+    attributez = Hash[* normalized_attributez.map { |key, value|
       [ key, unnormalize_xml_entities(value) ]
     }.flatten]
-    
+
     @name         = name.tr("-", "_")
     # leave the type alone if we don't know what it is
-    @type         = self.class.available_typecasts.include?(attributes["type"]) ? attributes.delete("type") : attributes["type"]
+    @type         = self.class.available_typecasts.include?(attributez["type"]) ? attributez.delete("type") : attributez["type"]
 
-    @nil_element  = attributes.delete("nil") == "true"
-    @attributes   = undasherize_keys(attributes)
+    @nil_element  = attributez.delete("nil") == "true"
+    @attributez   = undasherize_keys(attributez)
     @children     = []
     @text         = false
   end
@@ -75,15 +75,15 @@ class REXMLUtilityNode #:nodoc:
       class << f
         attr_accessor :original_filename, :content_type
       end
-      f.original_filename = attributes['name'] || 'untitled'
-      f.content_type = attributes['content_type'] || 'application/octet-stream'
+      f.original_filename = attributez['name'] || 'untitled'
+      f.content_type = attributez['content_type'] || 'application/octet-stream'
       return {name => f}
     end
 
     if @text
       t = typecast_value( unnormalize_xml_entities( inner_html ) )
-      t.class.send(:attr_accessor, :attributes)
-      t.attributes = attributes
+      t.class.send(:attr_accessor, :attributez)
+      t.attributez = attributez
       return { name => t }
     else
       #change repeating groups into an array
@@ -110,7 +110,7 @@ class REXMLUtilityNode #:nodoc:
             out.merge!( k => v.map{|e| e.to_hash[k]})
           end
         end
-        out.merge! attributes unless attributes.empty?
+        out.merge! attributez unless attributez.empty?
         out = out.empty? ? nil : out
       end
 
@@ -168,15 +168,15 @@ class REXMLUtilityNode #:nodoc:
   #
   # @return <String> The HTML node in text form.
   def to_html
-    attributes.merge!(:type => @type ) if @type
-    "<#{name}#{attributes.to_xml_attributes}>#{@nil_element ? '' : inner_html}</#{name}>"
+    attributez.merge!(:type => @type ) if @type
+    "<#{name}#{attributez.to_xml_attributez}>#{@nil_element ? '' : inner_html}</#{name}>"
   end
 
   # @alias #to_html #to_s
   def to_s
     to_html
   end
-  
+
   private
 
   def unnormalize_xml_entities value
