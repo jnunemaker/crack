@@ -20,7 +20,7 @@ module Crack
         # on 1.9.2 without blowing up.
         # see http://stackoverflow.com/questions/1224204/ruby-mechanize-getting-force-encoding-exception for a similar issue
         str.force_encoding('UTF-8') if defined?(Encoding) && str.respond_to?(:force_encoding)
-        str.gsub(/\\u0000/, "").gsub(/\\u([0-9a-f]{4})/) { [$1.hex].pack("U") }
+        str.gsub(/\\u0000/, "").gsub(/\\[u|U]([0-9a-fA-F]{4})/) { [$1.hex].pack("U") }
       end
 
       # matches YAML-formatted dates
