@@ -27,6 +27,14 @@ Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
   test.pattern = 'test/**/*_test.rb'
   test.verbose = false
+
+  begin
+    require 'psych'
+  rescue ::LoadError
+    puts('Psych not installed, skipping psych tests.')
+    test.test_files = FileList[test.pattern].exclude('test/psych_json_test.rb')
+    test.pattern = nil
+  end
 end
 
 task :default => :test
