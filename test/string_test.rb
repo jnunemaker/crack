@@ -15,8 +15,8 @@ class CrackTest < Test::Unit::TestCase
     end
 
     should "handles CamelCase with more than 2 capital letter in a row" do
-      Crack::Util.snake_case("CNN").should == "cnn"
-      Crack::Util.snake_case("CNNNews").should == "cnn_news"
+      Crack::Util.snake_case("CNN").should be == "cnn"
+      Crack::Util.snake_case("CNNNews").should be == "cnn_news"
       Crack::Util.snake_case("HeadlineCNNNews").should == "headline_cnn_news"
     end
 

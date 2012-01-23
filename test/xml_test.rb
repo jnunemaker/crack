@@ -31,7 +31,7 @@ class XmlTest < Test::Unit::TestCase
       </opt>
     XML
 
-    Crack::XML.parse(xml)['opt']['user'].class.should == Array
+    Crack::XML.parse(xml)['opt']['user'].class.should be == Array
 
     hash = {
       'opt' => {
@@ -55,7 +55,7 @@ class XmlTest < Test::Unit::TestCase
       </opt>
     XML
 
-    Crack::XML.parse(xml)['opt']['user'].class.should == Hash
+    Crack::XML.parse(xml)['opt']['user'].class.should be == Hash
 
     hash = {
       'opt' => {
@@ -65,10 +65,10 @@ class XmlTest < Test::Unit::TestCase
         }
       }
     }
-    
+
     Crack::XML.parse(xml).should == hash
   end
-  
+
   context "Parsing xml with text and attributes" do
     setup do
       xml =<<-XML
@@ -90,20 +90,20 @@ class XmlTest < Test::Unit::TestCase
         }
       }
     end
-    
+
     should "be parse attributes for text node if present" do
       @data['opt']['user'][0].attributes.should == {'login' => 'grep'}
     end
-    
+
     should "default attributes to empty hash if not present" do
       @data['opt']['user'][1].attributes.should == {}
     end
-    
+
     should "add 'attributes' accessor methods to parsed instances of String" do
       @data['opt']['user'][0].respond_to?(:attributes).should be(true)
       @data['opt']['user'][0].respond_to?(:attributes=).should be(true)
     end
-    
+
     should "not add 'attributes' accessor methods to all instances of String" do
       "some-string".respond_to?(:attributes).should be(false)
       "some-string".respond_to?(:attributes=).should be(false)
@@ -149,7 +149,7 @@ class XmlTest < Test::Unit::TestCase
       Crack::XML.parse(xml)['tag'].should =~ Regexp.new(k)
     end
   end
-  
+
   should "should unescape XML entities in attributes" do
     xml_entities.each do |k,v|
       xml = "<tag attr='Some content #{v}'></tag>"
@@ -421,8 +421,8 @@ class XmlTest < Test::Unit::TestCase
     hash['blog'].keys.should include('logo')
 
     file = hash['blog']['logo']
-    file.original_filename.should == 'logo.png'
-    file.content_type.should == 'image/png'
+    file.original_filename.should be == 'logo.png'
+    file.content_type.should be == 'image/png'
   end
 
   should "should handle file from xml with defaults (ActiveSupport Compatible)" do
@@ -433,8 +433,8 @@ class XmlTest < Test::Unit::TestCase
       </blog>
     XML
     file = Crack::XML.parse(blog_xml)['blog']['logo']
-    file.original_filename.should == 'untitled'
-    file.content_type.should == 'application/octet-stream'
+    file.original_filename.should be == 'untitled'
+    file.content_type.should be == 'application/octet-stream'
   end
 
   should "should handle xsd like types from xml (ActiveSupport Compatible)" do
@@ -487,11 +487,11 @@ class XmlTest < Test::Unit::TestCase
 
     Crack::XML.parse(xml_string)['person'].should == expected_hash
   end
-  
+
   should "handle an empty xml string" do
     Crack::XML.parse('').should == {}
   end
-  
+
   # As returned in the response body by the unfuddle XML API when creating objects
   should "handle an xml string containing a single space" do
     Crack::XML.parse(' ').should == {}
