@@ -496,4 +496,14 @@ class XmlTest < Test::Unit::TestCase
   should "handle an xml string containing a single space" do
     Crack::XML.parse(' ').should == {}
   end
+
+
+  should "be able to dump parsed xml" do
+    xml = <<-XML
+      <blog>
+        <posts language="english">I like big butts and I cannot Lie</posts>
+      </blog>
+    XML
+    lambda { Marshal.dump(Crack::XML.parse(xml)) }.should_not raise_error
+  end
 end
