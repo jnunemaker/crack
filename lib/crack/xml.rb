@@ -7,6 +7,13 @@ require 'time'
 require 'yaml'
 require 'bigdecimal'
 
+# The Reason behind redefining the String Class for this specific plugin is to
+# avoid the dynamic insertion of stuff on it (see version previous to this commit).
+# Doing that disables the possibility of efectuating a dump on the structure. This way it goes.
+class REXMLUtiliyNodeString < String
+  attr_accessor :attributes
+end
+
 # This is a slighly modified version of the XMLUtilityNode from
 # http://merb.devjavu.com/projects/merb/ticket/95 (has.sox@gmail.com)
 # It's mainly just adding vowels, as I ht cd wth n vwls :)
@@ -83,9 +90,7 @@ class REXMLUtilityNode #:nodoc:
     if @text
       t = typecast_value( unnormalize_xml_entities( inner_html ) )
       if t.is_a?(String)
-        class << t
-          attr_accessor :attributes
-        end
+        t = REXMLUtiliyNodeString.new(t)
         t.attributes = attributes
       end
       return { name => t }
