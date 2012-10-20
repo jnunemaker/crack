@@ -496,4 +496,16 @@ class XmlTest < Test::Unit::TestCase
   should "handle an xml string containing a single space" do
     Crack::XML.parse(' ').should == {}
   end
+
+  should "handle a node with type == file that has children" do
+    # Example is an excerpt from a problematic kvm domain config file
+    example_xml = <<-EOT
+    <disk type='file' device='cdrom'>
+      <driver name='qemu' type='raw' cache='none' io='native'/>
+      <source file='/tmp/cdrom.iso'/>
+    </disk>
+    EOT
+
+    Crack::XML.parse(example_xml).should == {"disk"=>{"driver"=>{"name"=>"qemu", "type"=>"raw", "cache"=>"none", "io"=>"native"}, "source"=>{"file"=>"/tmp/cdrom.iso"}, "type"=>"file", "device"=>"cdrom"}}
+  end
 end
