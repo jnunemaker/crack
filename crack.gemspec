@@ -4,13 +4,13 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{crack}
-  s.version = "0.3.1"
+  s.name = "crack"
+  s.version = "0.3.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = [%q{John Nunemaker}, %q{Wynn Netherland}]
-  s.date = %q{2011-09-21}
-  s.email = %q{nunemaker@gmail.com}
+  s.authors = ["John Nunemaker", "Wynn Netherland"]
+  s.date = "2013-01-09"
+  s.email = "nunemaker@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE",
     "README.rdoc"
@@ -35,11 +35,11 @@ Gem::Specification.new do |s|
     "test/test_helper.rb",
     "test/xml_test.rb"
   ]
-  s.homepage = %q{http://github.com/jnunemaker/crack}
-  s.require_paths = [%q{lib}]
-  s.rubyforge_project = %q{crack}
-  s.rubygems_version = %q{1.8.9}
-  s.summary = %q{Really simple JSON and XML parsing, ripped from Merb and Rails.}
+  s.homepage = "http://github.com/jnunemaker/crack"
+  s.require_paths = ["lib"]
+  s.rubyforge_project = "crack"
+  s.rubygems_version = "1.8.10"
+  s.summary = "Really simple JSON and XML parsing, ripped from Merb and Rails."
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
