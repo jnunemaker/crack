@@ -40,9 +40,7 @@ class REXMLUtilityNode #:nodoc:
   self.typecasts["decimal"]       = lambda{|v| v.nil? ? nil : BigDecimal(v.to_s)}
   self.typecasts["double"]        = lambda{|v| v.nil? ? nil : v.to_f}
   self.typecasts["float"]         = lambda{|v| v.nil? ? nil : v.to_f}
-  self.typecasts["symbol"]        = lambda{|v| v.nil? ? nil : v.to_sym}
   self.typecasts["string"]        = lambda{|v| v.to_s}
-  self.typecasts["yaml"]          = lambda{|v| v.nil? ? nil : YAML.load(v)}
   self.typecasts["base64Binary"]  = lambda{|v| v.unpack('m').first }
 
   self.available_typecasts = self.typecasts.keys
