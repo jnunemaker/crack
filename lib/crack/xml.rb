@@ -2,6 +2,7 @@ require 'rexml/parsers/streamparser'
 require 'rexml/parsers/baseparser'
 require 'rexml/light/node'
 require 'rexml/text'
+require "rexml/document"
 require 'date'
 require 'time'
 require 'yaml'
