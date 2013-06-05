@@ -1,0 +1,20 @@
+PATH
+  remote: .
+  specs:
+    crack (0.3.2)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    jnunemaker-matchy (0.4.0)
+    minitest (5.0.3)
+    rake (10.0.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  crack!
+  jnunemaker-matchy
+  minitest
+  rake

@@ -1,12 +1,12 @@
 require 'test_helper'
 
-class XmlTest < Test::Unit::TestCase
-  should "should transform a simple tag with content" do
+describe Crack::XML do
+  it "should transform a simple tag with content" do
     xml = "<tag>This is the contents</tag>"
-    Crack::XML.parse(xml).should == { 'tag' => 'This is the contents' }
+    Crack::XML.parse(xml).must_equal({ 'tag' => 'This is the contents' })
   end
 
-  should "should work with cdata tags" do
+  it "should work with cdata tags" do
     xml = <<-END
       <tag>
       <![CDATA[
@@ -14,16 +14,16 @@ class XmlTest < Test::Unit::TestCase
       ]]>
       </tag>
     END
-    Crack::XML.parse(xml)["tag"].strip.should == "text inside cdata"
+    Crack::XML.parse(xml)["tag"].strip.must_equal "text inside cdata"
   end
 
-  should "should transform a simple tag with attributes" do
+  it "should transform a simple tag with attributes" do
     xml = "<tag attr1='1' attr2='2'></tag>"
     hash = { 'tag' => { 'attr1' => '1', 'attr2' => '2' } }
-    Crack::XML.parse(xml).should == hash
+    Crack::XML.parse(xml).must_equal hash
   end
 
-  should "should transform repeating siblings into an array" do
+  it "should transform repeating siblings into an array" do
     xml =<<-XML
       <opt>
         <user login="grep" fullname="Gary R Epstein" />
@@ -31,7 +31,7 @@ class XmlTest < Test::Unit::TestCase
       </opt>
     XML
 
-    Crack::XML.parse(xml)['opt']['user'].class.should be == Array
+    Crack::XML.parse(xml)['opt']['user'].class.must_equal Array
 
     hash = {
       'opt' => {
@@ -45,17 +45,17 @@ class XmlTest < Test::Unit::TestCase
       }
     }
 
-    Crack::XML.parse(xml).should == hash
+    Crack::XML.parse(xml).must_equal hash
   end
 
-  should "should not transform non-repeating siblings into an array" do
+  it "should not transform non-repeating siblings into an array" do
     xml =<<-XML
       <opt>
         <user login="grep" fullname="Gary R Epstein" />
       </opt>
     XML
 
-    Crack::XML.parse(xml)['opt']['user'].class.should be == Hash
+    Crack::XML.parse(xml)['opt']['user'].class.must_equal Hash
 
     hash = {
       'opt' => {
@@ -66,11 +66,11 @@ class XmlTest < Test::Unit::TestCase
       }
     }
 
-    Crack::XML.parse(xml).should == hash
+    Crack::XML.parse(xml).must_equal hash
   end
 
-  context "Parsing xml with text and attributes" do
-    setup do
+  describe "Parsing xml with text and attributes" do
+    before do
       xml =<<-XML
         <opt>
           <user login="grep">Gary R Epstein</user>
@@ -80,60 +80,60 @@ class XmlTest < Test::Unit::TestCase
       @data = Crack::XML.parse(xml)
     end
 
-    should "correctly parse text nodes" do
-      @data.should == {
+    it "correctly parse text nodes" do
+      @data.must_equal({
         'opt' => {
           'user' => [
             'Gary R Epstein',
             'Simon T Tyson'
           ]
         }
-      }
+      })
     end
 
-    should "be parse attributes for text node if present" do
-      @data['opt']['user'][0].attributes.should == {'login' => 'grep'}
+    it "be parse attributes for text node if present" do
+      @data['opt']['user'][0].attributes.must_equal({'login' => 'grep'})
     end
 
-    should "default attributes to empty hash if not present" do
-      @data['opt']['user'][1].attributes.should == {}
+    it "default attributes to empty hash if not present" do
+      @data['opt']['user'][1].attributes.must_equal({})
     end
 
-    should "add 'attributes' accessor methods to parsed instances of String" do
-      @data['opt']['user'][0].respond_to?(:attributes).should be(true)
-      @data['opt']['user'][0].respond_to?(:attributes=).should be(true)
+    it "add 'attributes' accessor methods to parsed instances of String" do
+      @data['opt']['user'][0].respond_to?(:attributes).must_equal(true)
+      @data['opt']['user'][0].respond_to?(:attributes=).must_equal(true)
     end
 
-    should "not add 'attributes' accessor methods to all instances of String" do
-      "some-string".respond_to?(:attributes).should be(false)
-      "some-string".respond_to?(:attributes=).should be(false)
+    it "not add 'attributes' accessor methods to all instances of String" do
+      "some-string".respond_to?(:attributes).must_equal(false)
+      "some-string".respond_to?(:attributes=).must_equal(false)
     end
   end
 
-  should "should typecast an integer" do
+  it "should typecast an integer" do
     xml = "<tag type='integer'>10</tag>"
-    Crack::XML.parse(xml)['tag'].should == 10
+    Crack::XML.parse(xml)['tag'].must_equal 10
   end
 
-  should "should typecast a true boolean" do
+  it "should typecast a true boolean" do
     xml = "<tag type='boolean'>true</tag>"
-    Crack::XML.parse(xml)['tag'].should be(true)
+    Crack::XML.parse(xml)['tag'].must_equal(true)
   end
 
-  should "should typecast a false boolean" do
+  it "should typecast a false boolean" do
     ["false"].each do |w|
-      Crack::XML.parse("<tag type='boolean'>#{w}</tag>")['tag'].should be(false)
+      Crack::XML.parse("<tag type='boolean'>#{w}</tag>")['tag'].must_equal(false)
     end
   end
 
-  should "should typecast a datetime" do
+  it "should typecast a datetime" do
     xml = "<tag type='datetime'>2007-12-31 10:32</tag>"
-    Crack::XML.parse(xml)['tag'].should == Time.parse( '2007-12-31 10:32' ).utc
+    Crack::XML.parse(xml)['tag'].must_equal Time.parse( '2007-12-31 10:32' ).utc
   end
 
-  should "should typecast a date" do
+  it "should typecast a date" do
     xml = "<tag type='date'>2007-12-31</tag>"
-    Crack::XML.parse(xml)['tag'].should == Date.parse('2007-12-31')
+    Crack::XML.parse(xml)['tag'].must_equal Date.parse('2007-12-31')
   end
 
   xml_entities = {
@@ -143,57 +143,57 @@ class XmlTest < Test::Unit::TestCase
     "'" => "&apos;",
     "&" => "&amp;"
   }
-  should "should unescape html entities" do
+  it "should unescape html entities" do
     xml_entities.each do |k,v|
       xml = "<tag>Some content #{v}</tag>"
-      Crack::XML.parse(xml)['tag'].should =~ Regexp.new(k)
+      Crack::XML.parse(xml)['tag'].must_match Regexp.new(k)
     end
   end
 
-  should "should unescape XML entities in attributes" do
+  it "should unescape XML entities in attributes" do
     xml_entities.each do |k,v|
       xml = "<tag attr='Some content #{v}'></tag>"
-      Crack::XML.parse(xml)['tag']['attr'].should =~ Regexp.new(k)
+      Crack::XML.parse(xml)['tag']['attr'].must_match Regexp.new(k)
     end
   end
 
-  should "should undasherize keys as tags" do
+  it "should undasherize keys as tags" do
     xml = "<tag-1>Stuff</tag-1>"
-    Crack::XML.parse(xml).keys.should include( 'tag_1' )
+    Crack::XML.parse(xml).keys.must_include( 'tag_1' )
   end
 
-  should "should undasherize keys as attributes" do
+  it "should undasherize keys as attributes" do
     xml = "<tag1 attr-1='1'></tag1>"
-    Crack::XML.parse(xml)['tag1'].keys.should include( 'attr_1')
+    Crack::XML.parse(xml)['tag1'].keys.must_include( 'attr_1')
   end
 
-  should "should undasherize keys as tags and attributes" do
+  it "should undasherize keys as tags and attributes" do
     xml = "<tag-1 attr-1='1'></tag-1>"
-    Crack::XML.parse(xml).keys.should include( 'tag_1' )
-    Crack::XML.parse(xml)['tag_1'].keys.should include( 'attr_1')
+    Crack::XML.parse(xml).keys.must_include( 'tag_1' )
+    Crack::XML.parse(xml)['tag_1'].keys.must_include( 'attr_1')
   end
 
-  should "should render nested content correctly" do
+  it "should render nested content correctly" do
     xml = "<root><tag1>Tag1 Content <em><strong>This is strong</strong></em></tag1></root>"
-    Crack::XML.parse(xml)['root']['tag1'].should == "Tag1 Content <em><strong>This is strong</strong></em>"
+    Crack::XML.parse(xml)['root']['tag1'].must_equal "Tag1 Content <em><strong>This is strong</strong></em>"
   end
 
-  should "should render nested content with splshould text nodes correctly" do
+  it "should render nested content with splshould text nodes correctly" do
     xml = "<root>Tag1 Content<em>Stuff</em> Hi There</root>"
-    Crack::XML.parse(xml)['root'].should == "Tag1 Content<em>Stuff</em> Hi There"
+    Crack::XML.parse(xml)['root'].must_equal "Tag1 Content<em>Stuff</em> Hi There"
   end
 
-  should "should ignore attributes when a child is a text node" do
+  it "should ignore attributes when a child is a text node" do
     xml = "<root attr1='1'>Stuff</root>"
-    Crack::XML.parse(xml).should == { "root" => "Stuff" }
+    Crack::XML.parse(xml).must_equal({ "root" => "Stuff" })
   end
 
-  should "should ignore attributes when any child is a text node" do
+  it "should ignore attributes when any child is a text node" do
     xml = "<root attr1='1'>Stuff <em>in italics</em></root>"
-    Crack::XML.parse(xml).should == { "root" => "Stuff <em>in italics</em>" }
+    Crack::XML.parse(xml).must_equal({ "root" => "Stuff <em>in italics</em>" })
   end
 
-  should "should correctly transform multiple children" do
+  it "should correctly transform multiple children" do
     xml = <<-XML
     <user gender='m'>
       <age type='integer'>35</age>
@@ -215,10 +215,10 @@ class XmlTest < Test::Unit::TestCase
       }
     }
 
-    Crack::XML.parse(xml).should == hash
+    Crack::XML.parse(xml).must_equal hash
   end
 
-  should "should properly handle nil values (ActiveSupport Compatible)" do
+  it "should properly handle nil values (ActiveSupport Compatible)" do
     topic_xml = <<-EOT
       <topic>
         <title></title>
@@ -238,10 +238,10 @@ class XmlTest < Test::Unit::TestCase
       'viewed_at'  => nil,
       'parent_id'  => nil
     }
-    Crack::XML.parse(topic_xml)["topic"].should == expected_topic_hash
+    Crack::XML.parse(topic_xml)["topic"].must_equal expected_topic_hash
   end
 
-  should "should handle a single record from xml (ActiveSupport Compatible)" do
+  it "should handle a single record from xml (ActiveSupport Compatible)" do
     topic_xml = <<-EOT
       <topic>
         <title>The First Topic</title>
@@ -277,11 +277,11 @@ class XmlTest < Test::Unit::TestCase
     }
 
     Crack::XML.parse(topic_xml)["topic"].each do |k,v|
-      v.should == expected_topic_hash[k]
+      v.must_equal expected_topic_hash[k]
     end
   end
 
-  should "should handle multiple records (ActiveSupport Compatible)" do
+  it "should handle multiple records (ActiveSupport Compatible)" do
     topics_xml = <<-EOT
       <topics type="array">
         <topic>
@@ -328,11 +328,11 @@ class XmlTest < Test::Unit::TestCase
     }
     # puts Crack::XML.parse(topics_xml)['topics'].first.inspect
     Crack::XML.parse(topics_xml)["topics"].first.each do |k,v|
-      v.should == expected_topic_hash[k]
+      v.must_equal expected_topic_hash[k]
     end
   end
 
-  should "should handle a single record from_xml with attributes other than type (ActiveSupport Compatible)" do
+  it "should handle a single record from_xml with attributes other than type (ActiveSupport Compatible)" do
     topic_xml = <<-EOT
     <rsp stat="ok">
       <photos page="1" pages="1" perpage="100" total="16">
@@ -352,21 +352,21 @@ class XmlTest < Test::Unit::TestCase
       'isfamily' => "0",
     }
     Crack::XML.parse(topic_xml)["rsp"]["photos"]["photo"].each do |k,v|
-      v.should == expected_topic_hash[k]
+      v.must_equal expected_topic_hash[k]
     end
   end
 
-  should "should handle an emtpy array (ActiveSupport Compatible)" do
+  it "should handle an emtpy array (ActiveSupport Compatible)" do
     blog_xml = <<-XML
       <blog>
         <posts type="array"></posts>
       </blog>
     XML
     expected_blog_hash = {"blog" => {"posts" => []}}
-    Crack::XML.parse(blog_xml).should == expected_blog_hash
+    Crack::XML.parse(blog_xml).must_equal expected_blog_hash
   end
 
-  should "should handle empty array with whitespace from xml (ActiveSupport Compatible)" do
+  it "should handle empty array with whitespace from xml (ActiveSupport Compatible)" do
     blog_xml = <<-XML
       <blog>
         <posts type="array">
@@ -374,10 +374,10 @@ class XmlTest < Test::Unit::TestCase
       </blog>
     XML
     expected_blog_hash = {"blog" => {"posts" => []}}
-    Crack::XML.parse(blog_xml).should == expected_blog_hash
+    Crack::XML.parse(blog_xml).must_equal expected_blog_hash
   end
 
-  should "should handle array with one entry from_xml (ActiveSupport Compatible)" do
+  it "should handle array with one entry from_xml (ActiveSupport Compatible)" do
     blog_xml = <<-XML
       <blog>
         <posts type="array">
@@ -386,10 +386,10 @@ class XmlTest < Test::Unit::TestCase
       </blog>
     XML
     expected_blog_hash = {"blog" => {"posts" => ["a post"]}}
-    Crack::XML.parse(blog_xml).should == expected_blog_hash
+    Crack::XML.parse(blog_xml).must_equal expected_blog_hash
   end
 
-  should "should handle array with multiple entries from xml (ActiveSupport Compatible)" do
+  it "should handle array with multiple entries from xml (ActiveSupport Compatible)" do
     blog_xml = <<-XML
       <blog>
         <posts type="array">
@@ -399,10 +399,10 @@ class XmlTest < Test::Unit::TestCase
       </blog>
     XML
     expected_blog_hash = {"blog" => {"posts" => ["a post", "another post"]}}
-    Crack::XML.parse(blog_xml).should == expected_blog_hash
+    Crack::XML.parse(blog_xml).must_equal expected_blog_hash
   end
 
-  should "should handle file types (ActiveSupport Compatible)" do
+  it "should handle file types (ActiveSupport Compatible)" do
     blog_xml = <<-XML
       <blog>
         <logo type="file" name="logo.png" content_type="image/png">
@@ -410,15 +410,15 @@ class XmlTest < Test::Unit::TestCase
       </blog>
     XML
     hash = Crack::XML.parse(blog_xml)
-    hash.keys.should include('blog')
-    hash['blog'].keys.should include('logo')
+    hash.keys.must_include('blog')
+    hash['blog'].keys.must_include('logo')
 
     file = hash['blog']['logo']
-    file.original_filename.should be == 'logo.png'
-    file.content_type.should be == 'image/png'
+    file.original_filename.must_equal 'logo.png'
+    file.content_type.must_equal 'image/png'
   end
 
-  should "should handle file from xml with defaults (ActiveSupport Compatible)" do
+  it "should handle file from xml with defaults (ActiveSupport Compatible)" do
     blog_xml = <<-XML
       <blog>
         <logo type="file">
@@ -426,11 +426,11 @@ class XmlTest < Test::Unit::TestCase
       </blog>
     XML
     file = Crack::XML.parse(blog_xml)['blog']['logo']
-    file.original_filename.should be == 'untitled'
-    file.content_type.should be == 'application/octet-stream'
+    file.original_filename.must_equal 'untitled'
+    file.content_type.must_equal 'application/octet-stream'
   end
 
-  should "should handle xsd like types from xml (ActiveSupport Compatible)" do
+  it "should handle xsd like types from xml (ActiveSupport Compatible)" do
     bacon_xml = <<-EOT
     <bacon>
       <weight type="double">0.5</weight>
@@ -451,10 +451,10 @@ class XmlTest < Test::Unit::TestCase
       'illustration' => "babe.png"
     }
 
-    Crack::XML.parse(bacon_xml)["bacon"].should == expected_bacon_hash
+    Crack::XML.parse(bacon_xml)["bacon"].must_equal expected_bacon_hash
   end
 
-  should "should let type trickle through when unknown (ActiveSupport Compatible)" do
+  it "should let type trickle through when unknown (ActiveSupport Compatible)" do
     product_xml = <<-EOT
     <product>
       <weight type="double">0.5</weight>
@@ -468,25 +468,25 @@ class XmlTest < Test::Unit::TestCase
       'image' => {'type' => 'ProductImage', 'filename' => 'image.gif' },
     }
 
-    Crack::XML.parse(product_xml)["product"].should == expected_product_hash
+    Crack::XML.parse(product_xml)["product"].must_equal expected_product_hash
   end
 
-  should "should handle unescaping from xml (ActiveResource Compatible)" do
+  it "should handle unescaping from xml (ActiveResource Compatible)" do
     xml_string = '<person><bare-string>First &amp; Last Name</bare-string><pre-escaped-string>First &amp;amp; Last Name</pre-escaped-string></person>'
     expected_hash = {
       'bare_string'        => 'First & Last Name',
       'pre_escaped_string' => 'First &amp; Last Name'
     }
 
-    Crack::XML.parse(xml_string)['person'].should == expected_hash
+    Crack::XML.parse(xml_string)['person'].must_equal expected_hash
   end
 
-  should "handle an empty xml string" do
-    Crack::XML.parse('').should == {}
+  it "handle an empty xml string" do
+    Crack::XML.parse('').must_equal({})
   end
 
   # As returned in the response body by the unfuddle XML API when creating objects
-  should "handle an xml string containing a single space" do
-    Crack::XML.parse(' ').should == {}
+  it "handle an xml string containing a single space" do
+    Crack::XML.parse(' ').must_equal({})
   end
 end

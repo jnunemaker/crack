@@ -1,26 +1,26 @@
 require 'test_helper'
 
-class ParserTest < Test::Unit::TestCase
-  should "default to REXMLParser" do
-    Crack::XML.parser.should == Crack::REXMLParser
+describe Crack::XML do
+  it "default to REXMLParser" do
+    Crack::XML.parser.must_equal Crack::REXMLParser
   end
 
-  context "with a custom Parser" do
+  describe "with a custom Parser" do
     class CustomParser
       def self.parse(xml)
         xml
       end
     end
 
-    setup do
+    before do
       Crack::XML.parser = CustomParser
     end
 
-    should "use the custom Parser" do
-      Crack::XML.parse("<xml/>").should == "<xml/>"
+    it "use the custom Parser" do
+      Crack::XML.parse("<xml/>").must_equal "<xml/>"
     end
 
-    teardown do
+    after do
       Crack::XML.parser = nil
     end
   end

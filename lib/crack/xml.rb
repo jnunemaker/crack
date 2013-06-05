@@ -211,6 +211,7 @@ module Crack
           stack.last.add_node(event[1]) unless event[1].strip.length == 0 || stack.empty?
         end
       end
+
       stack.length > 0 ? stack.pop.to_hash : {}
     end
   end

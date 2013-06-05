@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'test_helper'
 
-class JsonTest < Test::Unit::TestCase  
+describe "JSON Parsing" do
   TESTS = {
     %q({"data": "G\u00fcnter"})                   => {"data" => "Günter"},
 		%q({"html": "\u003Cdiv\\u003E"})              => {"html" => "<div>"},
@@ -13,8 +13,8 @@ class JsonTest < Test::Unit::TestCase
     %({"returnTo":[1,"\\"a\\",", "b"]})           => {"returnTo" => [1, "\"a\",", "b"]},
     %({a: "'", "b": "5,000"})                     => {"a" => "'", "b" => "5,000"},
     %({a: "a's, b's and c's", "b": "5,000"})      => {"a" => "a's, b's and c's", "b" => "5,000"},
-    %({a: "2007-01-01"})                          => {'a' => Date.new(2007, 1, 1)}, 
-    %({a: "2007-01-01 01:12:34 Z"})               => {'a' => Time.utc(2007, 1, 1, 1, 12, 34)}, 
+    %({a: "2007-01-01"})                          => {'a' => Date.new(2007, 1, 1)},
+    %({a: "2007-01-01 01:12:34 Z"})               => {'a' => Time.utc(2007, 1, 1, 1, 12, 34)},
     # Handle ISO 8601 date/time format http://en.wikipedia.org/wiki/ISO_8601
     %({a: "2007-01-01T01:12:34Z"})                => {'a' => Time.utc(2007, 1, 1, 1, 12, 34)},
     # no time zone
@@ -42,41 +42,34 @@ class JsonTest < Test::Unit::TestCase
     %q({"foo":"bar\x00"}) => {"foo" => "bar\x00"},
     %q({"foo":"bar\x00baz"}) => {"foo" => "bar\x00baz"}
   }
-  
+
   TESTS.each do |json, expected|
-    should "decode json (#{json})" do
-      lambda {
-        Crack::JSON.parse(json).should == expected
-      }.should_not raise_error
+    it "decode json (#{json})" do
+      Crack::JSON.parse(json).must_equal expected
     end
   end
 
-  should "raise error for failed decoding" do
-    lambda {
+  it "raise error for failed decoding" do
+    assert_raises(Crack::ParseError) {
       Crack::JSON.parse(%({: 1}))
-    }.should raise_error(Crack::ParseError)
+    }
   end
-  
-  should "be able to parse a JSON response from a Twitter search about 'firefox'" do
+
+  it "be able to parse a JSON response from a Twitter search about 'firefox'" do
     data = ''
     File.open(File.dirname(__FILE__) + "/data/twittersearch-firefox.json", "r") { |f|
         data = f.read
     }
-    
-    lambda {
-      Crack::JSON.parse(data)
-    }.should_not raise_error(Crack::ParseError)
+
+    Crack::JSON.parse(data)
   end
 
-  should "be able to parse a JSON response from a Twitter search about 'internet explorer'" do
+  it "be able to parse a JSON response from a Twitter search about 'internet explorer'" do
     data = ''
     File.open(File.dirname(__FILE__) + "/data/twittersearch-ie.json", "r") { |f|
         data = f.read
     }
-    
-    lambda {
-      Crack::JSON.parse(data)
-    }.should_not raise_error(Crack::ParseError)
-  end
 
+    Crack::JSON.parse(data)
+  end
 end

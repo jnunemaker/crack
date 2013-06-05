@@ -1,5 +1,4 @@
 module Crack
-  VERSION = "0.3.2"
   class ParseError < StandardError; end
 end
 
