@@ -499,4 +499,16 @@ describe Crack::XML do
 
     Marshal.dump(Crack::XML.parse(xml))
   end
+
+  it "properly handles a node with type == file that has children" do
+    # Example is an excerpt from a problematic kvm domain config file
+    example_xml = <<-EOT
+    <disk type='file' device='cdrom'>
+      <driver name='qemu' type='raw' cache='none' io='native'/>
+      <source file='/tmp/cdrom.iso'/>
+    </disk>
+    EOT
+
+    Crack::XML.parse(example_xml).must_equal({"disk"=>{"driver"=>{"name"=>"qemu", "type"=>"raw", "cache"=>"none", "io"=>"native"}, "source"=>{"file"=>"/tmp/cdrom.iso"}, "type"=>"file", "device"=>"cdrom"}})
+  end
 end

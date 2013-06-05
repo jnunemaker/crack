@@ -76,7 +76,8 @@ class REXMLUtilityNode #:nodoc:
   end
 
   def to_hash
-    if @type == "file"
+    # ACG: Added a check here to prevent an exception a type == "file" tag has nodes within it
+    if @type == "file" and (@children.first.nil? or @children.first.is_a?(String))
       f = StringIO.new((@children.first || '').unpack('m').first)
       class << f
         attr_accessor :original_filename, :content_type
