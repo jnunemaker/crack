@@ -489,4 +489,14 @@ describe Crack::XML do
   it "handle an xml string containing a single space" do
     Crack::XML.parse(' ').must_equal({})
   end
+
+  it "can dump parsed xml" do
+    xml = <<-XML
+      <blog>
+        <posts language="english">I like big butts and I cannot Lie</posts>
+      </blog>
+    XML
+
+    Marshal.dump(Crack::XML.parse(xml))
+  end
 end
