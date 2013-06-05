@@ -11,6 +11,7 @@ module Crack
     def self.parser_exceptions
       @parser_exceptions ||= begin
         exceptions = [ArgumentError]
+
         if const_defined?(:Psych)
           if Psych.const_defined?(:SyntaxError)
             exceptions << Psych::SyntaxError
