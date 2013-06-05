@@ -192,7 +192,7 @@ module Crack
     def self.parse(xml)
       stack = []
       parser = REXML::Parsers::BaseParser.new(xml)
-
+      ret_hash={}
       while true
         event = parser.pull
         case event[0]
@@ -206,12 +206,29 @@ module Crack
           if stack.size > 1
             temp = stack.pop
             stack.last.add_node(temp)
+          else
+            temp=stack.pop.to_hash
+            key=''
+            temp.each_key do |k|
+              key=k
+            end
+            if ret_hash.has_key?(key)
+              ori=ret_hash[key]
+              new=temp[key]
+              temp_arr=[ori,new]
+              ret_hash[key]=temp_arr
+            else
+              ret_hash.merge!(temp)
+            end
           end
+
         when :text, :cdata
           stack.last.add_node(event[1]) unless event[1].strip.length == 0 || stack.empty?
         end
       end
-      stack.length > 0 ? stack.pop.to_hash : {}
+      #stack.length > 0 ? stack.pop.to_hash : {}
+      return ret_hash
+
     end
   end
 
