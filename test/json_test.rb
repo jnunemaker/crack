@@ -1,10 +1,10 @@
 # coding: utf-8
 require 'test_helper'
 
-class JsonTest < Test::Unit::TestCase  
+class JsonTest < Test::Unit::TestCase
   TESTS = {
     %q({"data": "G\u00fcnter"})                   => {"data" => "Günter"},
-		%q({"html": "\u003Cdiv\\u003E"})              => {"html" => "<div>"},
+    %q({"html": "\u003Cdiv\\u003E"})              => {"html" => "<div>"},
     %q({"returnTo":{"\/categories":"\/"}})        => {"returnTo" => {"/categories" => "/"}},
     %q({returnTo:{"\/categories":"\/"}})          => {"returnTo" => {"/categories" => "/"}},
     %q({"return\\"To\\":":{"\/categories":"\/"}}) => {"return\"To\":" => {"/categories" => "/"}},
@@ -13,8 +13,8 @@ class JsonTest < Test::Unit::TestCase
     %({"returnTo":[1,"\\"a\\",", "b"]})           => {"returnTo" => [1, "\"a\",", "b"]},
     %({a: "'", "b": "5,000"})                     => {"a" => "'", "b" => "5,000"},
     %({a: "a's, b's and c's", "b": "5,000"})      => {"a" => "a's, b's and c's", "b" => "5,000"},
-    %({a: "2007-01-01"})                          => {'a' => Date.new(2007, 1, 1)}, 
-    %({a: "2007-01-01 01:12:34 Z"})               => {'a' => Time.utc(2007, 1, 1, 1, 12, 34)}, 
+    %({a: "2007-01-01"})                          => {'a' => Date.new(2007, 1, 1)},
+    %({a: "2007-01-01 01:12:34 Z"})               => {'a' => Time.utc(2007, 1, 1, 1, 12, 34)},
     # Handle ISO 8601 date/time format http://en.wikipedia.org/wiki/ISO_8601
     %({a: "2007-01-01T01:12:34Z"})                => {'a' => Time.utc(2007, 1, 1, 1, 12, 34)},
     # no time zone
@@ -42,7 +42,7 @@ class JsonTest < Test::Unit::TestCase
     %q({"foo":"bar\x00"}) => {"foo" => "bar\x00"},
     %q({"foo":"bar\x00baz"}) => {"foo" => "bar\x00baz"}
   }
-  
+
   TESTS.each do |json, expected|
     should "decode json (#{json})" do
       lambda {
@@ -56,13 +56,13 @@ class JsonTest < Test::Unit::TestCase
       Crack::JSON.parse(%({: 1}))
     }.should raise_error(Crack::ParseError)
   end
-  
+
   should "be able to parse a JSON response from a Twitter search about 'firefox'" do
     data = ''
     File.open(File.dirname(__FILE__) + "/data/twittersearch-firefox.json", "r") { |f|
         data = f.read
     }
-    
+
     lambda {
       Crack::JSON.parse(data)
     }.should_not raise_error(Crack::ParseError)
@@ -73,10 +73,15 @@ class JsonTest < Test::Unit::TestCase
     File.open(File.dirname(__FILE__) + "/data/twittersearch-ie.json", "r") { |f|
         data = f.read
     }
-    
+
     lambda {
       Crack::JSON.parse(data)
     }.should_not raise_error(Crack::ParseError)
   end
 
+  should "be able to parse json from yaml file correctly with ruby 1.9.2" do
+    require 'yaml'
+    e = Crack::JSON.parse(YAML.load_file(File.dirname(__FILE__) + "/data/large_raw_json.yml")["body"])
+    assert_equal "OK", e["status"]
+  end
 end
