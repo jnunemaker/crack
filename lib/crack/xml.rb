@@ -188,7 +188,7 @@ class REXMLUtilityNode #:nodoc:
 end
 
 module Crack
-	class REXMLParser
+  class REXMLParser
     def self.parse(xml)
       stack = []
       parser = REXML::Parsers::BaseParser.new(xml)
