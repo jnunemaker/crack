@@ -31,7 +31,7 @@ class XmlTest < Test::Unit::TestCase
       </opt>
     XML
 
-    Crack::XML.parse(xml)['opt']['user'].class.should == Array
+    Crack::XML.parse(xml)['opt']['user'].class.should be == Array
 
     hash = {
       'opt' => {
@@ -55,7 +55,7 @@ class XmlTest < Test::Unit::TestCase
       </opt>
     XML
 
-    Crack::XML.parse(xml)['opt']['user'].class.should == Hash
+    Crack::XML.parse(xml)['opt']['user'].class.should be == Hash
 
     hash = {
       'opt' => {
@@ -414,8 +414,8 @@ class XmlTest < Test::Unit::TestCase
     hash['blog'].keys.should include('logo')
 
     file = hash['blog']['logo']
-    file.original_filename.should == 'logo.png'
-    file.content_type.should == 'image/png'
+    file.original_filename.should be == 'logo.png'
+    file.content_type.should be == 'image/png'
   end
 
   should "should handle file from xml with defaults (ActiveSupport Compatible)" do
@@ -426,8 +426,8 @@ class XmlTest < Test::Unit::TestCase
       </blog>
     XML
     file = Crack::XML.parse(blog_xml)['blog']['logo']
-    file.original_filename.should == 'untitled'
-    file.content_type.should == 'application/octet-stream'
+    file.original_filename.should be == 'untitled'
+    file.content_type.should be == 'application/octet-stream'
   end
 
   should "should handle xsd like types from xml (ActiveSupport Compatible)" do
