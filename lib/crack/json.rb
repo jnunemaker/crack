@@ -8,9 +8,22 @@ require 'strscan'
 
 module Crack
   class JSON
+    def self.parser_exceptions
+      @parser_exceptions ||= begin
+        exceptions = [ArgumentError]
+        if const_defined?(:Psych)
+          if Psych.const_defined?(:SyntaxError)
+            exceptions << Psych::SyntaxError
+          end
+        end
+
+        exceptions
+      end
+    end
+
     def self.parse(json)
       YAML.load(unescape(convert_json_to_yaml(json)))
-    rescue ArgumentError
+    rescue *parser_exceptions
       raise ParseError, "Invalid JSON string"
     end
 
