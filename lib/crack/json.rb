@@ -43,7 +43,7 @@ module Crack
       # Ensure that ":" and "," are always followed by a space
       def self.convert_json_to_yaml(json) #:nodoc:
         json = String.new(json) #can't modify a frozen string
-        scanner, quoting, marks, pos, times = StringScanner.new(json), false, [], nil, []
+        scanner, quoting, marks, pos, date_starts, date_ends = StringScanner.new(json), false, [], nil, [], []
         while scanner.scan_until(/(\\['"]|['":,\/\\]|\\.)/)
           case char = scanner[1]
           when '"', "'"
@@ -56,7 +56,8 @@ module Crack
                 # oh, and increment them for each current mark, each one is an extra padded space that bumps
                 # the position in the final YAML output
                 total_marks = marks.size
-                times << pos+total_marks << scanner.pos+total_marks
+                date_starts << pos+total_marks
+                date_ends << scanner.pos+total_marks
               end
               quoting = false
             end
@@ -84,9 +85,17 @@ module Crack
           end
           output = output * " "
 
-          times.each { |i| output[i-1] = ' ' }
+          format_dates(output, date_starts, date_ends)
           output.gsub!(/\\\//, '/')
           output
+        end
+      end
+
+      def self.format_dates(output, date_starts, date_ends)
+        if YAML.constants.include?('Syck')
+          (date_starts + date_ends).each { |i| output[i-1] = ' ' }
+        else
+          date_starts.each { |i| output[i-2] = '!!timestamp ' }
         end
       end
   end
