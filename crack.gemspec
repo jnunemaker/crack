@@ -16,5 +16,5 @@ Gem::Specification.new do |gem|
   gem.version       = Crack::VERSION
   gem.license       = "MIT"
 
-  gem.add_dependency "safe_yaml", "~> 0.9.0"
+  gem.add_dependency "safe_yaml", "~> 1.0.0"
 end
