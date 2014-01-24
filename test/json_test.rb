@@ -49,6 +49,11 @@ describe "JSON Parsing" do
     end
   end
 
+  it "is not vulnerable to YAML deserialization exploits" do
+    class Foo; end
+    refute_instance_of(Foo, Crack::JSON.parse("# '---/\n--- !ruby/object:Foo\n  foo: bar"))
+  end
+
   it "raise error for failed decoding" do
     assert_raises(Crack::ParseError) {
       Crack::JSON.parse(%({: 1}))
