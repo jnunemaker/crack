@@ -1,5 +1,7 @@
 # crack
 
+[![Build Status](https://travis-ci.org/jnunemaker/crack.svg?branch=master)](https://travis-ci.org/jnunemaker/crack)
+
 Really simple JSON and XML parsing, ripped from Merb and Rails. The XML parser is ripped from Merb and the JSON parser is ripped from Rails. I take no credit, just packaged them for all to enjoy and easily use.
 
 ## compatibility
