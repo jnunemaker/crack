@@ -82,7 +82,7 @@ module Crack
         if marks.empty?
           json.gsub(/\\\//, '/')
         else
-          left_pos  = [-1].push(*marks)
+          left_pos  = marks.clone.unshift(-1)
           right_pos = marks << json.length
           output    = []
           left_pos.each_with_index do |left, i|

@@ -77,4 +77,13 @@ describe "JSON Parsing" do
 
     Crack::JSON.parse(data)
   end
+
+  it "does not raise SystemStackError when parsing large JSON files" do
+    data = ''
+    File.open(File.dirname(__FILE__) + "/data/large_dataset.json", "r") { |f|
+      data = f.read
+    }
+
+    Crack::JSON.parse(data)
+  end
 end
