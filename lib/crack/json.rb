@@ -100,7 +100,11 @@ module Crack
         if YAML.constants.include?('Syck')
           (date_starts + date_ends).each { |i| output[i-1] = ' ' }
         else
-          date_starts.each { |i| output[i-2] = '!!timestamp ' }
+          extra_chars_to_be_added = 0
+          date_starts.each do |i|
+            output[i-2+extra_chars_to_be_added] = '!!timestamp '
+            extra_chars_to_be_added += 10
+          end
         end
       end
   end
