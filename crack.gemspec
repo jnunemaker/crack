@@ -15,6 +15,4 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Crack::VERSION
   gem.license       = "MIT"
-
-  gem.add_dependency "safe_yaml", "~> 1.0.0"
 end
