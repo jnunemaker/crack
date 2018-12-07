@@ -3,34 +3,21 @@
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'safe_yaml/load'
 require 'strscan'
 
 module Crack
   class JSON
     def self.parser_exceptions
-      @parser_exceptions ||= begin
-        exceptions = [ArgumentError]
-
-        if const_defined?(:Psych)
-          if Psych.const_defined?(:SyntaxError)
-            exceptions << Psych::SyntaxError
-          end
-        end
-
-        exceptions
-      end
+      @parser_exceptions ||= [ArgumentError, Psych::SyntaxError]
     end
 
     def self.parse(json)
-      args = [unescape(convert_json_to_yaml(json))]
-      args << nil if SafeYAML::MULTI_ARGUMENT_YAML_LOAD
-      args << { :whitelisted_tags => ['!ruby/regexp'] }
-
-      SafeYAML.load(*args)
-
+      yaml = unescape(convert_json_to_yaml(json))
+      YAML.safe_load(yaml, [Regexp, Date, Time])
     rescue *parser_exceptions
       raise ParseError, "Invalid JSON string"
+    rescue Psych::DisallowedClass
+      yaml
     end
 
     protected
