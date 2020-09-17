@@ -1,3 +1,8 @@
+== 0.4.4 2020-09-17
+
+* 1 minor patch
+  * Remove safe_yaml
+
 == 0.1.7 2010-02-19
 * 1 minor patch
   * Added patch from @purp for ISO 8601 date/time format
