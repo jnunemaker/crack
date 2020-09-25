@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["nunemaker@gmail.com"]
   gem.description   = %q{Really simple JSON and XML parsing, ripped from Merb and Rails.}
   gem.summary       = %q{Really simple JSON and XML parsing, ripped from Merb and Rails.}
-  gem.homepage      = "http://github.com/jnunemaker/crack"
+  gem.homepage      = "https://github.com/jnunemaker/crack"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files -- lib/*`.split("\n")
