@@ -15,5 +15,5 @@ Gem::Specification.new do |gem|
   gem.version       = Crack::VERSION
   gem.license       = "MIT"
 
-  gem.add_runtime_dependency("rexml")
+  gem.add_dependency("rexml")
 end
