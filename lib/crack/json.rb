@@ -13,7 +13,7 @@ module Crack
 
     def self.parse(json)
       yaml = unescape(convert_json_to_yaml(json))
-      YAML.safe_load(yaml, [Regexp, Date, Time])
+      YAML.safe_load(yaml, permitted_classes: [Regexp, Date, Time])
     rescue *parser_exceptions
       raise ParseError, "Invalid JSON string"
     rescue Psych::DisallowedClass
