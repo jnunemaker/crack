@@ -15,5 +15,6 @@ Gem::Specification.new do |gem|
   gem.version       = Crack::VERSION
   gem.license       = "MIT"
 
+  gem.add_runtime_dependency("bigdecimal")
   gem.add_runtime_dependency("rexml")
 end
