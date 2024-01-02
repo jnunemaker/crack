@@ -100,9 +100,12 @@ module Crack
           (date_starts + date_ends).each { |i| output[i-1] = ' ' }
         else
           extra_chars_to_be_added = 0
+          timestamp_marker = '!!timestamp '
+          timestamp_marker_size = timestamp_marker.size
+
           date_starts.each do |i|
-            output[i-2+extra_chars_to_be_added] = '!!timestamp '
-            extra_chars_to_be_added += 10
+            output[i-2+extra_chars_to_be_added] = timestamp_marker
+            extra_chars_to_be_added += timestamp_marker_size - 1
           end
         end
       end

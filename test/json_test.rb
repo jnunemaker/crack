@@ -14,7 +14,7 @@ describe "JSON Parsing" do
     %({"a": "'", "b": "5,000"})                   => {"a" => "'", "b" => "5,000"},
     %({"a": "a's, b's and c's", "b": "5,000"})    => {"a" => "a's, b's and c's", "b" => "5,000"},
     %({"a": "2007-01-01"})                        => {'a' => Date.new(2007, 1, 1)},
-    %({"first_date": "2016-01-25", "second_date": "2014-01-26"}) => {'first_date' => Date.new(2016, 1, 25), 'second_date' => Date.new(2014, 1, 26)},
+    %({"first_date": "2016-01-25", "second_date": "2014-01-26", "third_date": "2024-01-02"}) => {'first_date' => Date.new(2016, 1, 25), 'second_date' => Date.new(2014, 1, 26), 'third_date' => Date.new(2024, 1, 2)},
     %({"first_date": "2016-01-25", "non_date": "Abc", "second_date": "2014-01-26"}) => {'first_date' => Date.new(2016, 1, 25), 'non_date' => 'Abc', 'second_date' => Date.new(2014, 1, 26)},
     %({"a": "2007-01-01 01:12:34 Z"})             => {'a' => Time.utc(2007, 1, 1, 1, 12, 34)},
     # Handle ISO 8601 date/time format http://en.wikipedia.org/wiki/ISO_8601
