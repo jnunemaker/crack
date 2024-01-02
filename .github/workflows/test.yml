@@ -1,0 +1,55 @@
+name: Test
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+
+jobs:
+  test_ruby_versions:
+    runs-on: ubuntu-20.04
+
+    continue-on-error: ${{ matrix.allow_failures == 'allow failures' || false }}
+
+    env:
+      BUNDLE_GEMFILE: "${{ matrix.gemfile }}" ### allows adding gemfile: to the matrix, bundler will automatically pick this up
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ruby: "2.0"
+          - ruby: 2.1
+          - ruby: 2.2
+          - ruby: 2.3
+          - ruby: 2.4
+          - ruby: 2.5
+          - ruby: 2.6
+          - ruby: 2.7
+          - ruby: "3.0" ### must be quoted otherwise will be treated as "3" which resolves to latest 3.x version
+          - ruby: 3.1
+            allow_failures: 'allow failures'
+          - ruby: 3.2
+            allow_failures: 'allow failures'
+          - ruby: 3.3
+            allow_failures: 'allow failures'
+          - ruby: head
+            allow_failures: 'allow failures'
+
+          - ruby: jruby-9.3
+          - ruby: jruby-9.4
+            allow_failures: 'allow failures'
+          - ruby: jruby-head
+            allow_failures: 'allow failures'
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "${{ matrix.ruby }}"
+        bundler-cache: true
+
+    - name: Run tests
+      run: |
+        bundle exec rake
