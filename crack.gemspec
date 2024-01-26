@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = "https://github.com/jnunemaker/crack"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  gem.files         = `git ls-files -- lib/*`.split("\n")
+  gem.files         = `git ls-files -- lib/* LICENSE README.md History`.split("\n")
   gem.name          = "crack"
   gem.require_paths = ["lib"]
   gem.version       = Crack::VERSION
