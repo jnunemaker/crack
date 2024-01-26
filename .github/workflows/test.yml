@@ -28,17 +28,13 @@ jobs:
           - ruby: 2.7
           - ruby: "3.0" ### must be quoted otherwise will be treated as "3" which resolves to latest 3.x version
           - ruby: 3.1
-            allow_failures: 'allow failures'
           - ruby: 3.2
-            allow_failures: 'allow failures'
           - ruby: 3.3
-            allow_failures: 'allow failures'
           - ruby: head
             allow_failures: 'allow failures'
 
           - ruby: jruby-9.3
           - ruby: jruby-9.4
-            allow_failures: 'allow failures'
           - ruby: jruby-head
             allow_failures: 'allow failures'
     steps:
