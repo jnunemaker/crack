@@ -4,6 +4,7 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 require 'strscan'
+require 'psych'
 
 module Crack
   class JSON
@@ -11,13 +12,24 @@ module Crack
       @parser_exceptions ||= [ArgumentError, Psych::SyntaxError]
     end
 
-    def self.parse(json)
-      yaml = unescape(convert_json_to_yaml(json))
-      YAML.safe_load(yaml, [Regexp, Date, Time])
-    rescue *parser_exceptions
-      raise ParseError, "Invalid JSON string"
-    rescue Psych::DisallowedClass
-      yaml
+    if Gem::Version.new(Psych::VERSION) >= Gem::Version.new('3.1.0')
+      def self.parse(json)
+        yaml = unescape(convert_json_to_yaml(json))
+        YAML.safe_load(yaml, permitted_classes: [Regexp, Date, Time])
+      rescue *parser_exceptions
+        raise ParseError, "Invalid JSON string"
+      rescue Psych::DisallowedClass
+        yaml
+      end
+    else # Ruby < 2.6
+      def self.parse(json)
+        yaml = unescape(convert_json_to_yaml(json))
+        YAML.safe_load(yaml, [Regexp, Date, Time])
+      rescue *parser_exceptions
+        raise ParseError, "Invalid JSON string"
+      rescue Psych::DisallowedClass
+        yaml
+      end
     end
 
     protected
