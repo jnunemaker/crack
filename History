@@ -1,3 +1,12 @@
+== 0.4.6 2024-01-29
+
+* minor patches
+  * Ruby 3.1, 3.2, 3.3 support
+  * Ship LICENSE file
+  * Add BidDecimal to gem dependency
+  * Move CI to Github Actions
+  * Fix parse issue with consecutive dates
+
 == 0.4.5 2020-12-26
 
 * 1 minor patch
@@ -28,7 +37,7 @@
 * 2 minor patches
   * Correct unnormalization of attribute values (der-flo)
   * Fix error in parsing YAML in the case where a hash value ends with backslashes, and there are subsequent values in the hash (deadprogrammer)
-  
+
 == 0.1.1 2009-03-31
 * 1 minor patch
   * Parsing empty or blank xml now returns empty hash instead of raising error.
