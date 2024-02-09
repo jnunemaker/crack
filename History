@@ -1,3 +1,9 @@
+== 1.0.0 2024-02-09
+
+This version is identical with the previous one, there's no code changes.
+
+Releasing v1.0.0 indicates that the gem has a stable API and it's going to follow semantic versioning.
+
 == 0.4.6 2024-01-29
 
 * minor patches
