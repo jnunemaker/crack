@@ -232,6 +232,8 @@ module Crack
     end
 
     def self.parse(xml)
+      return {} if xml.strip == ''
+
       parser.parse(xml)
     end
   end
