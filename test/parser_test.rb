@@ -2,7 +2,7 @@ require 'test_helper'
 
 describe Crack::XML do
   it "default to REXMLParser" do
-    Crack::XML.parser.must_equal Crack::REXMLParser
+    expect(Crack::XML.parser).must_equal Crack::REXMLParser
   end
 
   describe "with a custom Parser" do
@@ -17,7 +17,7 @@ describe Crack::XML do
     end
 
     it "use the custom Parser" do
-      Crack::XML.parse("<xml/>").must_equal "<xml/>"
+      expect(Crack::XML.parse("<xml/>")).must_equal "<xml/>"
     end
 
     after do
