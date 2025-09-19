@@ -3,7 +3,7 @@ require 'test_helper'
 describe Crack::XML do
   it "should transform a simple tag with content" do
     xml = "<tag>This is the contents</tag>"
-    Crack::XML.parse(xml).must_equal({ 'tag' => 'This is the contents' })
+    expect(Crack::XML.parse(xml)).must_equal({ 'tag' => 'This is the contents' })
   end
 
   it "should work with cdata tags" do
@@ -14,13 +14,13 @@ describe Crack::XML do
       ]]>
       </tag>
     END
-    Crack::XML.parse(xml)["tag"].strip.must_equal "text inside cdata"
+    expect(Crack::XML.parse(xml)["tag"].strip).must_equal "text inside cdata"
   end
 
   it "should transform a simple tag with attributes" do
     xml = "<tag attr1='1' attr2='2'></tag>"
     hash = { 'tag' => { 'attr1' => '1', 'attr2' => '2' } }
-    Crack::XML.parse(xml).must_equal hash
+    expect(Crack::XML.parse(xml)).must_equal hash
   end
 
   it "should transform repeating siblings into an array" do
@@ -31,7 +31,7 @@ describe Crack::XML do
       </opt>
     XML
 
-    Crack::XML.parse(xml)['opt']['user'].class.must_equal Array
+    expect(Crack::XML.parse(xml)['opt']['user'].class).must_equal Array
 
     hash = {
       'opt' => {
@@ -45,7 +45,7 @@ describe Crack::XML do
       }
     }
 
-    Crack::XML.parse(xml).must_equal hash
+    expect(Crack::XML.parse(xml)).must_equal hash
   end
 
   it "should not transform non-repeating siblings into an array" do
@@ -55,7 +55,7 @@ describe Crack::XML do
       </opt>
     XML
 
-    Crack::XML.parse(xml)['opt']['user'].class.must_equal Hash
+    expect(Crack::XML.parse(xml)['opt']['user'].class).must_equal Hash
 
     hash = {
       'opt' => {
@@ -66,7 +66,7 @@ describe Crack::XML do
       }
     }
 
-    Crack::XML.parse(xml).must_equal hash
+    expect(Crack::XML.parse(xml)).must_equal hash
   end
 
   describe "Parsing xml with text and attributes" do
@@ -81,7 +81,7 @@ describe Crack::XML do
     end
 
     it "correctly parse text nodes" do
-      @data.must_equal({
+      expect(@data).must_equal({
         'opt' => {
           'user' => [
             'Gary R Epstein',
@@ -92,48 +92,48 @@ describe Crack::XML do
     end
 
     it "be parse attributes for text node if present" do
-      @data['opt']['user'][0].attributes.must_equal({'login' => 'grep'})
+      expect(@data['opt']['user'][0].attributes).must_equal({'login' => 'grep'})
     end
 
     it "default attributes to empty hash if not present" do
-      @data['opt']['user'][1].attributes.must_equal({})
+      expect(@data['opt']['user'][1].attributes).must_equal({})
     end
 
     it "add 'attributes' accessor methods to parsed instances of String" do
-      @data['opt']['user'][0].respond_to?(:attributes).must_equal(true)
-      @data['opt']['user'][0].respond_to?(:attributes=).must_equal(true)
+      expect(@data['opt']['user'][0].respond_to?(:attributes)).must_equal(true)
+      expect(@data['opt']['user'][0].respond_to?(:attributes=)).must_equal(true)
     end
 
     it "not add 'attributes' accessor methods to all instances of String" do
-      "some-string".respond_to?(:attributes).must_equal(false)
-      "some-string".respond_to?(:attributes=).must_equal(false)
+      expect("some-string".respond_to?(:attributes)).must_equal(false)
+      expect("some-string".respond_to?(:attributes=)).must_equal(false)
     end
   end
 
   it "should typecast an integer" do
     xml = "<tag type='integer'>10</tag>"
-    Crack::XML.parse(xml)['tag'].must_equal 10
+    expect(Crack::XML.parse(xml)['tag']).must_equal 10
   end
 
   it "should typecast a true boolean" do
     xml = "<tag type='boolean'>true</tag>"
-    Crack::XML.parse(xml)['tag'].must_equal(true)
+    expect(Crack::XML.parse(xml)['tag']).must_equal(true)
   end
 
   it "should typecast a false boolean" do
     ["false"].each do |w|
-      Crack::XML.parse("<tag type='boolean'>#{w}</tag>")['tag'].must_equal(false)
+      expect(Crack::XML.parse("<tag type='boolean'>#{w}</tag>")['tag']).must_equal(false)
     end
   end
 
   it "should typecast a datetime" do
     xml = "<tag type='datetime'>2007-12-31 10:32</tag>"
-    Crack::XML.parse(xml)['tag'].must_equal Time.parse( '2007-12-31 10:32' ).utc
+    expect(Crack::XML.parse(xml)['tag']).must_equal Time.parse( '2007-12-31 10:32' ).utc
   end
 
   it "should typecast a date" do
     xml = "<tag type='date'>2007-12-31</tag>"
-    Crack::XML.parse(xml)['tag'].must_equal Date.parse('2007-12-31')
+    expect(Crack::XML.parse(xml)['tag']).must_equal Date.parse('2007-12-31')
   end
 
   xml_entities = {
@@ -146,51 +146,51 @@ describe Crack::XML do
   it "should unescape html entities" do
     xml_entities.each do |k,v|
       xml = "<tag>Some content #{v}</tag>"
-      Crack::XML.parse(xml)['tag'].must_match Regexp.new(k)
+      expect(Crack::XML.parse(xml)['tag']).must_match Regexp.new(k)
     end
   end
 
   it "should unescape XML entities in attributes" do
     xml_entities.each do |k,v|
       xml = "<tag attr='Some content #{v}'></tag>"
-      Crack::XML.parse(xml)['tag']['attr'].must_match Regexp.new(k)
+      expect(Crack::XML.parse(xml)['tag']['attr']).must_match Regexp.new(k)
     end
   end
 
   it "should undasherize keys as tags" do
     xml = "<tag-1>Stuff</tag-1>"
-    Crack::XML.parse(xml).keys.must_include( 'tag_1' )
+    expect(Crack::XML.parse(xml).keys).must_include( 'tag_1' )
   end
 
   it "should undasherize keys as attributes" do
     xml = "<tag1 attr-1='1'></tag1>"
-    Crack::XML.parse(xml)['tag1'].keys.must_include( 'attr_1')
+    expect(Crack::XML.parse(xml)['tag1'].keys).must_include( 'attr_1')
   end
 
   it "should undasherize keys as tags and attributes" do
     xml = "<tag-1 attr-1='1'></tag-1>"
-    Crack::XML.parse(xml).keys.must_include( 'tag_1' )
-    Crack::XML.parse(xml)['tag_1'].keys.must_include( 'attr_1')
+    expect(Crack::XML.parse(xml).keys).must_include( 'tag_1' )
+    expect(Crack::XML.parse(xml)['tag_1'].keys).must_include( 'attr_1')
   end
 
   it "should render nested content correctly" do
     xml = "<root><tag1>Tag1 Content <em><strong>This is strong</strong></em></tag1></root>"
-    Crack::XML.parse(xml)['root']['tag1'].must_equal "Tag1 Content <em><strong>This is strong</strong></em>"
+    expect(Crack::XML.parse(xml)['root']['tag1']).must_equal "Tag1 Content <em><strong>This is strong</strong></em>"
   end
 
   it "should render nested content with splshould text nodes correctly" do
     xml = "<root>Tag1 Content<em>Stuff</em> Hi There</root>"
-    Crack::XML.parse(xml)['root'].must_equal "Tag1 Content<em>Stuff</em> Hi There"
+    expect(Crack::XML.parse(xml)['root']).must_equal "Tag1 Content<em>Stuff</em> Hi There"
   end
 
   it "should ignore attributes when a child is a text node" do
     xml = "<root attr1='1'>Stuff</root>"
-    Crack::XML.parse(xml).must_equal({ "root" => "Stuff" })
+    expect(Crack::XML.parse(xml)).must_equal({ "root" => "Stuff" })
   end
 
   it "should ignore attributes when any child is a text node" do
     xml = "<root attr1='1'>Stuff <em>in italics</em></root>"
-    Crack::XML.parse(xml).must_equal({ "root" => "Stuff <em>in italics</em>" })
+    expect(Crack::XML.parse(xml)).must_equal({ "root" => "Stuff <em>in italics</em>" })
   end
 
   it "should correctly transform multiple children" do
@@ -215,7 +215,7 @@ describe Crack::XML do
       }
     }
 
-    Crack::XML.parse(xml).must_equal hash
+    expect(Crack::XML.parse(xml)).must_equal hash
   end
 
   it "should properly handle nil values (ActiveSupport Compatible)" do
@@ -238,7 +238,7 @@ describe Crack::XML do
       'viewed_at'  => nil,
       'parent_id'  => nil
     }
-    Crack::XML.parse(topic_xml)["topic"].must_equal expected_topic_hash
+    expect(Crack::XML.parse(topic_xml)["topic"]).must_equal expected_topic_hash
   end
 
   it "should handle a single record from xml (ActiveSupport Compatible)" do
@@ -277,7 +277,11 @@ describe Crack::XML do
     }
 
     Crack::XML.parse(topic_xml)["topic"].each do |k,v|
-      v.must_equal expected_topic_hash[k]
+      if expected_topic_hash[k].nil?
+        assert_nil(v)
+      else
+        expect(v).must_equal expected_topic_hash[k]
+      end
     end
   end
 
@@ -327,8 +331,12 @@ describe Crack::XML do
       'parent_id' => nil
     }
     # puts Crack::XML.parse(topics_xml)['topics'].first.inspect
-    Crack::XML.parse(topics_xml)["topics"].first.each do |k,v|
-      v.must_equal expected_topic_hash[k]
+    Crack::XML.parse(topics_xml)["topics"].first.each do |k, v|
+      if expected_topic_hash[k].nil?
+        assert_nil(v)
+      else
+        expect(v).must_equal expected_topic_hash[k]
+      end
     end
   end
 
@@ -352,7 +360,7 @@ describe Crack::XML do
       'isfamily' => "0",
     }
     Crack::XML.parse(topic_xml)["rsp"]["photos"]["photo"].each do |k,v|
-      v.must_equal expected_topic_hash[k]
+      expect(v).must_equal expected_topic_hash[k]
     end
   end
 
@@ -363,7 +371,7 @@ describe Crack::XML do
       </blog>
     XML
     expected_blog_hash = {"blog" => {"posts" => []}}
-    Crack::XML.parse(blog_xml).must_equal expected_blog_hash
+    expect(Crack::XML.parse(blog_xml)).must_equal expected_blog_hash
   end
 
   it "should handle empty array with whitespace from xml (ActiveSupport Compatible)" do
@@ -374,7 +382,7 @@ describe Crack::XML do
       </blog>
     XML
     expected_blog_hash = {"blog" => {"posts" => []}}
-    Crack::XML.parse(blog_xml).must_equal expected_blog_hash
+    expect(Crack::XML.parse(blog_xml)).must_equal expected_blog_hash
   end
 
   it "should handle array with one entry from_xml (ActiveSupport Compatible)" do
@@ -386,7 +394,7 @@ describe Crack::XML do
       </blog>
     XML
     expected_blog_hash = {"blog" => {"posts" => ["a post"]}}
-    Crack::XML.parse(blog_xml).must_equal expected_blog_hash
+    expect(Crack::XML.parse(blog_xml)).must_equal expected_blog_hash
   end
 
   it "should handle array with multiple entries from xml (ActiveSupport Compatible)" do
@@ -399,7 +407,7 @@ describe Crack::XML do
       </blog>
     XML
     expected_blog_hash = {"blog" => {"posts" => ["a post", "another post"]}}
-    Crack::XML.parse(blog_xml).must_equal expected_blog_hash
+    expect(Crack::XML.parse(blog_xml)).must_equal expected_blog_hash
   end
 
   it "should handle file types (ActiveSupport Compatible)" do
@@ -410,12 +418,12 @@ describe Crack::XML do
       </blog>
     XML
     hash = Crack::XML.parse(blog_xml)
-    hash.keys.must_include('blog')
-    hash['blog'].keys.must_include('logo')
+    expect(hash.keys).must_include('blog')
+    expect(hash['blog'].keys).must_include('logo')
 
     file = hash['blog']['logo']
-    file.original_filename.must_equal 'logo.png'
-    file.content_type.must_equal 'image/png'
+    expect(file.original_filename).must_equal 'logo.png'
+    expect(file.content_type).must_equal 'image/png'
   end
 
   it "should handle file from xml with defaults (ActiveSupport Compatible)" do
@@ -426,8 +434,8 @@ describe Crack::XML do
       </blog>
     XML
     file = Crack::XML.parse(blog_xml)['blog']['logo']
-    file.original_filename.must_equal 'untitled'
-    file.content_type.must_equal 'application/octet-stream'
+    expect(file.original_filename).must_equal 'untitled'
+    expect(file.content_type).must_equal 'application/octet-stream'
   end
 
   it "should handle xsd like types from xml (ActiveSupport Compatible)" do
@@ -451,7 +459,7 @@ describe Crack::XML do
       'illustration' => "babe.png"
     }
 
-    Crack::XML.parse(bacon_xml)["bacon"].must_equal expected_bacon_hash
+    expect(Crack::XML.parse(bacon_xml)["bacon"]).must_equal expected_bacon_hash
   end
 
   it "should let type trickle through when unknown (ActiveSupport Compatible)" do
@@ -468,7 +476,7 @@ describe Crack::XML do
       'image' => {'type' => 'ProductImage', 'filename' => 'image.gif' },
     }
 
-    Crack::XML.parse(product_xml)["product"].must_equal expected_product_hash
+    expect(Crack::XML.parse(product_xml)["product"]).must_equal expected_product_hash
   end
 
   it "should handle unescaping from xml (ActiveResource Compatible)" do
@@ -478,16 +486,16 @@ describe Crack::XML do
       'pre_escaped_string' => 'First &amp; Last Name'
     }
 
-    Crack::XML.parse(xml_string)['person'].must_equal expected_hash
+    expect(Crack::XML.parse(xml_string)['person']).must_equal expected_hash
   end
 
   it "handle an empty xml string" do
-    Crack::XML.parse('').must_equal({})
+    expect(Crack::XML.parse('')).must_equal({})
   end
 
   # As returned in the response body by the unfuddle XML API when creating objects
   it "handle an xml string containing a single space" do
-    Crack::XML.parse(' ').must_equal({})
+    expect(Crack::XML.parse(' ')).must_equal({})
   end
 
   it "can dump parsed xml" do
@@ -509,6 +517,6 @@ describe Crack::XML do
     </disk>
     EOT
 
-    Crack::XML.parse(example_xml).must_equal({"disk"=>{"driver"=>{"name"=>"qemu", "type"=>"raw", "cache"=>"none", "io"=>"native"}, "source"=>{"file"=>"/tmp/cdrom.iso"}, "type"=>"file", "device"=>"cdrom"}})
+    expect(Crack::XML.parse(example_xml)).must_equal({"disk"=>{"driver"=>{"name"=>"qemu", "type"=>"raw", "cache"=>"none", "io"=>"native"}, "source"=>{"file"=>"/tmp/cdrom.iso"}, "type"=>"file", "device"=>"cdrom"}})
   end
 end

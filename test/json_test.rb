@@ -47,7 +47,11 @@ describe "JSON Parsing" do
 
   TESTS.each do |json, expected|
     it "decode json (#{json})" do
-      Crack::JSON.parse(json).must_equal expected
+      if expected.nil?
+        assert_nil(Crack::JSON.parse(json))
+      else
+        expect(Crack::JSON.parse(json)).must_equal expected
+      end
     end
   end
 
