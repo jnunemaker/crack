@@ -26,5 +26,5 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 2.0'
 
   gem.add_runtime_dependency('bigdecimal')
-  gem.add_runtime_dependency('rexml')
+  gem.add_runtime_dependency('rexml', '>= 3.3.9')
 end
