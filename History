@@ -1,3 +1,9 @@
+== 1.0.1 2025-09-22
+
+* minor patches
+  * Ruby 3.4 support
+  * Handle new "No root element" error from REXML
+
 == 1.0.0 2024-02-09
 
 This version is identical with the previous one, there's no code changes.
