@@ -10,6 +10,7 @@ Really simple JSON and XML parsing, ripped from Merb and Rails. The XML parser i
 
 * Ruby 2.x
 * Ruby 3.x
+* Ruby 4.x
 
 ## note on patches/pull requests
 
